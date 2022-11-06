@@ -1,9 +1,10 @@
 import requests
 import json
+import pandas as pd
 
-prices = []
+# API reference: http://api.scraperlink.com/investpy/
 BASE_URL = 'http://api.scraperlink.com/investpy/?email=your@email.com&type=historical_data&product=cryptos&symbol=BTC'
-
+    
 def get_crypto_data(start, end):
     '''
     Scrape data current solution
@@ -15,12 +16,8 @@ def get_crypto_data(start, end):
     )
     return response.json()['data']
 
-def export_data():
-    '''
-    Export obtained data as JSON
-    '''
-    json_data = json.dumps(prices, indent=4)
-    with open ('../../data/prices.json', 'w') as file:
-        file.write(json_data)
+def create_dataframe(prices):
+    return pd.DataFrame(prices)
 
-# API reference: http://api.scraperlink.com/investpy/
+def export_data(df):
+    df.to_csv('../../data/BTC_Prices.csv')
