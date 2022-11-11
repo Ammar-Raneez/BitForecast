@@ -17,7 +17,13 @@ def get_crypto_data(start, end):
     return response.json()['data']
 
 def create_dataframe(prices):
+    '''
+    Create dataframe of fetched prices
+    '''
     return pd.DataFrame(prices)
 
 def export_data(df):
+    '''
+    Save data
+    '''
     df.to_csv('../../data/BTC_Prices.csv')

@@ -19,6 +19,9 @@ def parse(string_list):
     return values_only
 
 def process_scripts():
+    '''
+    Scrape URL script tag and extract tweet volume & respective date
+    '''
     dates = []
     tweets = []
     
@@ -39,12 +42,18 @@ def process_scripts():
     return dates, tweets
 
 def create_dataframe():
+    '''
+    Create dataframe from scraped twitter volume and dates
+    '''
     dates, tweets = process_scripts()
     df = pd.DataFrame(list(zip(dates, tweets)), columns=['Date', 'Tweet Volume'])
     return df
 
 def export_data(df):
-    df.to_csv('../../data/BTC_Tweet_Volume.csv')
+    '''
+    Save data
+    '''
+    df.to_csv('../../data/Tweets/BTC_tweet_volume.csv')
 
 
 
