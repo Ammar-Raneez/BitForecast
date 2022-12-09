@@ -77,8 +77,8 @@ def process_tweets(tweets_list):
             texts.append(j[2])
 
     df_details = {
-        'user_name': usernames,
-        'date': dates,
+        'user': usernames,
+        'timestamp': dates,
         'text': texts
     }
 
@@ -97,7 +97,7 @@ def clean_tweets(dates):
     df_days = process_tweets(tweets_list)
 
     for df in df_days:
-        df.dropna(subset=['user_name', 'date', 'text'], inplace=True)
+        df.dropna(subset=['user', 'timestamp', 'text'], inplace=True)
 
         L = []
         for row in df['text']:
