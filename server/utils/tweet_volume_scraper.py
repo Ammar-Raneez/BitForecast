@@ -13,6 +13,7 @@ def parse(string_list):
     parse list of strings within the script tag
     [date, volume]
     '''
+
     clean = re.sub('[\[\],\s]', '', string_list)
     splitted = re.split("[\'\"]", clean)
     values_only = [s for s in splitted if s != '']
@@ -22,9 +23,10 @@ def process_scripts():
     '''
     Scrape URL script tag and extract tweet volume & respective date
     '''
+
     dates = []
     tweets = []
-    
+
     for script in scripts:
         if 'd = new Dygraph(document.getElementById("container")' in script.text:
             str_lst = script.text
@@ -32,19 +34,20 @@ def process_scripts():
             str_lst = str_lst.split(']]')[0] +']]'
             str_lst = str_lst.replace('new Date(', '').replace(')', '')
             data = parse(str_lst)
-    
+
     for each in data:
         if (data.index(each) % 2) == 0:
             dates.append(each)
         else:
             tweets.append(each)
-            
+
     return dates, tweets
 
 def create_dataframe():
     '''
     Create dataframe from scraped twitter volume and dates
     '''
+
     dates, tweets = process_scripts()
     df = pd.DataFrame(list(zip(dates, tweets)), columns=['Date', 'Tweet Volume'])
     return df
@@ -53,9 +56,5 @@ def export_data(df):
     '''
     Save data
     '''
-    df.to_csv('../../data/Tweets/BTC_tweet_volume.csv')
 
-
-
-
-
+    df.to_csv('../../ml/data/Tweets/BTC_Tweet_Volume.csv')
