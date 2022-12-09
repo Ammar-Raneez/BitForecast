@@ -6,6 +6,8 @@ import datetime
 import os
 from tqdm import tqdm
 
+FOLDER_PATH = '../../ml/data/Tweets/tweets_complete'
+
 def dt(x):
     '''
     helper function to create pandas date
@@ -20,7 +22,7 @@ def get_dates():
     '''
 
     today =  datetime.datetime.today().strftime('%Y-%m-%d')
-    latest_date = max([i.replace('.csv', '') for i in os.listdir('../../../data/tweets/tweets_complete')[:-1]])
+    latest_date = max([i.replace('.csv', '') for i in os.listdir(FOLDER_PATH)[:-1]])
 
     # From dates after including date (don't refetch latest date)
     from_date = pd.Timestamp(latest_date) + datetime.timedelta(days=1)
@@ -109,7 +111,7 @@ def clean_tweets(dates):
         df_filtered = df[df['lang'] == 'en']
         df_filtered.drop(['lang'], axis=1, inplace=True)
         filename = str(df.iloc[0]['date'])
-        df_filtered.to_csv(f'../../ml/data/Tweets/tweets_complete/{filename}.csv')
+        df_filtered.to_csv(f'{FOLDER_PATH}/{filename}.csv')
 
     return df_days
 

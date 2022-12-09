@@ -2,12 +2,14 @@ from pytrends.request import TrendReq
 import pandas as pd
 import numpy as np
 
+FILE_PATH = '../../ml/data/GTrends/BTC_GTrends_total_cleaned.csv'
+
 def get_available_data():
     '''
     Get current available data
     '''
 
-    df = pd.read_csv('../../ml/data/GTrends/BTC_GTrends_total_cleaned.csv')
+    df = pd.read_csv(FILE_PATH)
     df.sort_values(['date'], inplace=True)
     return df
 
@@ -79,4 +81,4 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv('../../ml/data/GTrends/BTC_GTrends_total_cleaned.csv')
+    df.to_csv(FILE_PATH)

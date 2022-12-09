@@ -1,9 +1,9 @@
 import requests
-import json
 import pandas as pd
 
 # API reference: http://api.scraperlink.com/investpy/
 BASE_URL = 'http://api.scraperlink.com/investpy/?email=your@email.com&type=historical_data&product=cryptos&symbol=BTC'
+FILE_PATH = '../../ml/data/BTC_Prices.csv'
 
 def get_crypto_data(start, end):
     '''
@@ -30,4 +30,4 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv('../../ml/data/BTC_Prices.csv')
+    df.to_csv(FILE_PATH)

@@ -4,6 +4,8 @@ import pandas as pd
 import re
 
 URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
+FILE_PATH = '../../ml/data/Tweets/BTC_Tweet_Volume.csv'
+
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
 scripts = soup.find_all('script')
@@ -57,4 +59,4 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv('../../ml/data/Tweets/BTC_Tweet_Volume.csv')
+    df.to_csv(FILE_PATH)
