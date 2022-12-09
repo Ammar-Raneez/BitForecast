@@ -1,6 +1,6 @@
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
-from whatthelang import WhatTheLang
+from lingua import Language, LanguageDetectorBuilder
 
 import datetime
 import os
@@ -92,7 +92,6 @@ def clean_tweets(dates):
     Clean tweets that have empty records and non-english tweets
     '''
 
-    wtl = WhatTheLang()
     tweets_list = scrape_tweets(dates)
     df_days = process_tweets(tweets_list)
 
@@ -103,12 +102,12 @@ def clean_tweets(dates):
         for row in df['text']:
             # Use WTL to remove any non-english observations
             if len(row) != 0:
-                L.append(wtl.predict_lang(row))
+                L.append(detector.detect_language_of(row))
             else:
                 L.append(None)
 
         df['lang'] = L
-        df_filtered = df[df['lang'] == 'en']
+        df_filtered = df[df['lang'] == Language.ENGLISH]
         df_filtered.drop(['lang'], axis=1, inplace=True)
         filename = str(df.iloc[0]['date'])
         df_filtered.to_csv(f'{FOLDER_PATH}/{filename}.csv')
