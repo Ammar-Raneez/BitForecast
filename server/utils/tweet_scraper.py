@@ -7,6 +7,7 @@ import os
 from tqdm import tqdm
 
 FOLDER_PATH = '../../ml/data/Tweets/tweets_complete'
+detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.GERMAN).build()
 
 def dt(x):
     '''
