@@ -2,7 +2,7 @@ from pytrends.request import TrendReq
 import pandas as pd
 import numpy as np
 
-FILE_PATH = '../../ml/data/GTrends/BTC_GTrends_total_cleaned.csv'
+FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/GTrends/BTC_GTrends_total_cleaned.csv'
 
 def get_available_data():
     '''
@@ -10,6 +10,9 @@ def get_available_data():
     '''
 
     df = pd.read_csv(FILE_PATH)
+
+    # Ensure date column is in datetime format
+    df['date'] = pd.to_datetime(df['date'])
     df.sort_values(['date'], inplace=True)
     return df
 
@@ -70,10 +73,12 @@ def update_data():
     combined_df = pd.concat([avail_df, curr_df])
 
     # Remove any duplicate observations
+    combined_df.index = pd.to_datetime(combined_df.index)
     combined_df = combined_df[~combined_df.index.duplicated(keep='first')]
 
     # Round value
     combined_df['bitcoin_unscaled'] = [int(np.ceil(i)) for i in combined_df['bitcoin_unscaled']]
+    combined_df.sort_index(inplace=True)
     return combined_df
 
 def export_data(df):
@@ -82,3 +87,14 @@ def export_data(df):
     '''
 
     df.to_csv(FILE_PATH)
+
+def update_trends():
+    '''
+    Main runner
+    '''
+
+    df = update_data()
+    export_data(df)
+
+if __name__ == '__main__':
+    update_trends()

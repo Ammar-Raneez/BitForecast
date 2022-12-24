@@ -4,7 +4,7 @@ import pandas as pd
 import re
 
 URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
-FILE_PATH = '../../ml/data/Tweets/BTC_Tweet_Volume.csv'
+FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Volume.csv'
 
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -60,3 +60,14 @@ def export_data(df):
     '''
 
     df.to_csv(FILE_PATH)
+
+def update_tweet_volume():
+    '''
+    Main runner
+    '''
+
+    df = create_dataframe()
+    export_data(df)
+
+if __name__ == '__main__':
+    update_tweet_volume()
