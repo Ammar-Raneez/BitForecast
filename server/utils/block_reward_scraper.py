@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-URL = 'https://bitinfocharts.com/comparison/size-btc.html#alltime'
+URL = 'https://bitinfocharts.com/comparison/fee_to_reward-btc.html#alltime'
 FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Block_Reward.csv'
 
 response = requests.get(URL)

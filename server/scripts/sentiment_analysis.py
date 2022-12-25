@@ -2,7 +2,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from tqdm import tqdm
 
-FOLDER_PATH = '../../ml/data/Tweets/tweets_complete_sentiment_unweighed'
+FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete_sentiment_unweighed'
 
 def preprocess(text):
     '''
@@ -31,12 +31,12 @@ def calculate_sentiment(sentence):
         print(f'Something went wrong with this sentence: {sentence}')
         return e
 
-def get_sentiments(dfs):
+def analyze_sentiment(dfs):
     '''
-    dfs -> comes from the tweet_scraper script (only the new fetched dates)
     Updates all dfs with respective sentiment columns
     '''
 
+    sentiment_analyzed_dfs = []
     for i, df in tqdm(enumerate(dfs)):
         # Certain files have timestamp, certain have date
         if df.iloc[0].get('timestamp'):
@@ -52,7 +52,7 @@ def get_sentiments(dfs):
 
         for j in range(df.shape[0]):
             try:
-                neg, neu, pos, compound = calculate_sentiment(df.iloc[j]['text'])
+                neg, neu, pos, compound = calculate_sentiment(preprocess(df.iloc[j]['text']))
             except:
                 neg, neu, pos, compound = None, None, None, None
 
@@ -65,7 +65,10 @@ def get_sentiments(dfs):
         df['positive_score'] = positive_scores
         df['neutral_score'] = neutral_scores
         df['compound_score'] = compound_scores
+        sentiment_analyzed_dfs.append(df)
         export_data(df, df_filename)
+
+    return sentiment_analyzed_dfs
 
 def export_data(df, filename):
     '''
@@ -73,3 +76,13 @@ def export_data(df, filename):
     '''
 
     df.to_csv(f'{FOLDER_PATH}/{filename}.csv')
+
+def analyze_sentiments(dfs):
+    '''
+    Main runner
+    dfs -> comes from the tweet_scraper script (only the new fetched dates)
+    '''
+
+    print('\nRunning sentiment analysis...', end='\n')
+    sentiment_analyzed_dfs = analyze_sentiment(dfs)
+    return sentiment_analyzed_dfs

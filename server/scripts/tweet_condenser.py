@@ -2,8 +2,8 @@ import pandas as pd
 import os
 from tqdm import tqdm
 
-FOLDER_PATH = '../../ml/data/Tweets/tweets_complete_sentiment_unweighed'
-OUTPUT_PATH = '../../ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
+FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete_sentiment_unweighed'
+OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
 ALL_FILES = os.listdir(FOLDER_PATH)
 
 def read_csvs():
@@ -14,15 +14,16 @@ def read_csvs():
     dfs = [pd.read_csv(f'{FOLDER_PATH}/{i}', engine='python') for i in ALL_FILES]
     return dfs
 
-def condense_tweets(dfs):
+def condense(new_dfs):
     '''
-    Condense tweet dfs into a single df of averaged sentiment values
-    for each date
+    Condense tweet dfs into a single df of averaged sentiment values for each date
     '''
 
     condensed_df = None
+    existing_dfs = read_csvs()
+    all_dfs = existing_dfs + new_dfs
 
-    for i, df in tqdm(enumerate(dfs)):
+    for i, df in tqdm(enumerate(all_dfs)):
         # Certain files have timestamp column, certain have date
         if df.iloc[0].get('timestamp'):
             df_filename = str(df.iloc[0]['timestamp'])
@@ -46,6 +47,8 @@ def condense_tweets(dfs):
         else:
             condensed_df = pd.DataFrame(data, index=None)
 
+    # Remove duplicate dates
+    condensed_df = condensed_df[~condensed_df.date.duplicated(keep='first')]
     return condensed_df
 
 def export_data(df):
@@ -54,3 +57,13 @@ def export_data(df):
     '''
 
     df.to_csv(OUTPUT_PATH)
+
+def condense_tweets(dfs):
+    '''
+    Main runner
+    dfs -> comes from the sentiment_analysis script (only the new fetched dates)
+    '''
+
+    print('\nRunning tweet condensation...', end='\n')
+    condensed_df = condense(dfs)
+    export_data(condensed_df)
