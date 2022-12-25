@@ -1,29 +1,33 @@
 import pandas as pd
-import os
 from tqdm import tqdm
 
-FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete_sentiment_unweighed'
 OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
-ALL_FILES = os.listdir(FOLDER_PATH)
 
-def read_csvs():
+def dt(x):
     '''
-    Load all tweet csvs in folder into a list of dfs which can then be condensed
+    helper function to create pandas date
     '''
 
-    dfs = [pd.read_csv(f'{FOLDER_PATH}/{i}', engine='python') for i in ALL_FILES]
-    return dfs
+    t = pd.Timestamp(x)
+    return pd.Timestamp.date(t)
 
-def condense(new_dfs):
+def read_csv():
+    '''
+    Load all existing condensed csv
+    '''
+
+    df = pd.read_csv(f'{OUTPUT_PATH}', engine='python')
+    return df
+
+def condense(dfs):
     '''
     Condense tweet dfs into a single df of averaged sentiment values for each date
     '''
 
     condensed_df = None
-    existing_dfs = read_csvs()
-    all_dfs = existing_dfs + new_dfs
+    existing_df = read_csv()
 
-    for i, df in tqdm(enumerate(all_dfs)):
+    for i, df in tqdm(enumerate(dfs)):
         # Certain files have timestamp column, certain have date
         if df.iloc[0].get('timestamp'):
             df_filename = str(df.iloc[0]['timestamp'])
@@ -47,9 +51,16 @@ def condense(new_dfs):
         else:
             condensed_df = pd.DataFrame(data, index=None)
 
+    condensed_combined_df = pd.concat([existing_df, condensed_df])
+    condensed_combined_df.date = condensed_combined_df.date.apply(dt)
+    condensed_combined_df.sort_values(['date'], inplace=True)
+
     # Remove duplicate dates
-    condensed_df = condensed_df[~condensed_df.date.duplicated(keep='first')]
-    return condensed_df
+    condensed_combined_df = condensed_combined_df[~condensed_combined_df.date.duplicated(keep='first')]
+
+    # Filter only required columns
+    condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]
+    return condensed_combined_df_required
 
 def export_data(df):
     '''
