@@ -171,3 +171,21 @@ a:hover {
 .provider-name {
   margin-left: 10px;
 }
+
+
+.search-crypto {
+  margin: 20px auto 30px auto;
+  width: 250px;
+}
+
+.crypto-card-container {
+  min-height: 65vh !important;
+}
+
+.crypto-card {
+  min-width: 250px;
+}
+
+.crypto-card .crypto-image {
+  width:35px;
+}
