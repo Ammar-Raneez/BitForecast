@@ -1,3 +1,4 @@
+/* Globals navbar and footer */
 :root {
   --text-primary: #000;
   --bgPrimary: #fff;
@@ -65,48 +66,11 @@ a:hover {
   color: white;
 }
 
-.menu-control-container {
-  display: none !important;
-  position: absolute !important;
-  right: 10px !important;
-  top: 25px !important;
-  font-size: 1.2rem !important;
-  background-color: var(--bgSecondary) !important;
-  border: none !important;
-}
-
 .loader {
   height: 81vh;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-@media screen and (max-width: 1050px) {
-  .menu-control-container {
-    display: block !important;
-  }
-
-  .nav-container {
-    height: 6vh;
-    width: 100%;
-    background-color: var(--bgSecondary);
-  }
-
-  .app {
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .navbar {
-    flex: 1;
-  }
-
-  .main {
-    flex: 1;
-    margin-left: 0px;
-    margin-right: 10px;
-  }
 }
 
 .footer {
@@ -117,13 +81,19 @@ a:hover {
   align-items: center;
 }
 
-@media screen and (max-width: 600px) {
-  .logo-container .logo {
-    display: none;
-  }
+/* Home page */
+.home-heading-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
 }
 
+.show-more {
+  margin-top: 0px !important;
+}
 
+/* News page */
 .select-news {
   width: 180px;
 }
@@ -172,7 +142,7 @@ a:hover {
   margin-left: 10px;
 }
 
-
+/* Cryptocurrencies page */
 .search-crypto {
   margin: 20px auto 30px auto;
   width: 250px;
@@ -188,4 +158,48 @@ a:hover {
 
 .crypto-card .crypto-image {
   width:35px;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1050px) {
+  .nav-container {
+    height: 6vh;
+    width: 100%;
+    background-color: var(--bgSecondary);
+  }
+
+  .app {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .navbar {
+    flex: 1;
+  }
+
+  .main {
+    flex: 1;
+    margin-left: 0px;
+    margin-right: 10px;
+  }
+
+  .home-title {
+    font-size: 1.4rem !important;
+  }
+
+  .show-more {
+    font-size: 1.3rem !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .logo-container .logo {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .heading {
+    margin-top: 20px;
+  }
 }
