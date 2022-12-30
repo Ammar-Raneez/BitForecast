@@ -18,7 +18,7 @@ function App() {
         <Navbar />
       </div>
       <div className="main">
-        <Layout>
+        <Layout style={{ justifyContent: 'center' }}>
           <div className="routes">
             <Routes>
               <Route exact path="/" element={<Home />} />

@@ -6,7 +6,7 @@
   --dark-blue: #0071bd;
   --light-blue: #e6f7ff;
   --border: #d9d9d9;
-  --bgDark: #001529;
+  --bgDark: #062848;
 }
 
 * {
@@ -23,17 +23,19 @@ a:hover {
   display: flex;
   overflow: hidden;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 .navbar {
-  flex: 0.2;
   padding: 0.5rem 1rem;
-  background-color: rgb(0, 21, 41);
+  background-color: var(--bgDark);
 }
 
 .main {
-  flex: 0.8;
+  flex: 1;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .routes {
@@ -56,6 +58,7 @@ a:hover {
 .navbar-menu {
   display: flex;
   align-items: center;
+  background-color: var(--bgDark) !important;
 }
 
 .logo {
@@ -327,7 +330,61 @@ a:hover {
   margin-top: 20px !important;
 }
 
+
+/* Login form */
+.admin-login-branding {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.admin-login-logo {
+  width: 200px;
+  object-fit: contain;
+}
+
+.admin-login-desc {
+  color: var(--dark-blue) !important;
+}
+
+.login-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.login-form .ant-divider {
+  border-top-color: var(--dark-blue) !important;
+}
+
+.login-form .ant-divider-inner-text,
+.admin-login-title {
+  color: var(--bgDark) !important;
+}
+
+.admin-login-title {
+  text-align: center;
+}
+
+.login-form-button {
+  width: 100%;
+  background-color: var(--bgDark) !important;
+  border-color: var(--bgDark) !important;
+}
+
+
 /* Responsiveness */
+@media screen and (max-width: 1200px) {
+  .admin-login-branding,
+  .admin-login-form {
+    flex: 1 !important;
+    max-width: 100% !important;
+  }
+}
+
 @media screen and (max-width: 1050px) {
   .nav-container {
     height: 6vh;
@@ -340,12 +397,7 @@ a:hover {
     overflow: hidden;
   }
 
-  .navbar {
-    flex: 1;
-  }
-
   .main {
-    flex: 1;
     margin-left: 0px;
     margin-right: 10px;
   }
@@ -376,6 +428,10 @@ a:hover {
 @media screen and (max-width: 600px) {
   .logo-container .logo {
     display: none;
+  }
+
+  .admin-login-branding {
+    display: none !important;
   }
 }
 

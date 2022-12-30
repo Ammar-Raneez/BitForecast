@@ -7,8 +7,6 @@ import Loader from './Loader';
 import News from './News';
 import { useGetCryptosQuery } from '../services/cryptoDetailsApi';
 
-const { Title } = Typography;
-
 const Home = () => {
   const { data, isFetching } = useGetCryptosQuery(10);
   const globalStats = data?.data?.stats;
@@ -17,7 +15,7 @@ const Home = () => {
 
   return (
     <>
-      <Title level={2} className="heading">Global Crypto Stats</Title>
+      <Typography.Title level={2} className="heading">Global Crypto Stats</Typography.Title>
       <Row gutter={[32, 32]}>
         <Col span={12}>
           <Statistic title="Total Cryptocurrencies" value={globalStats.total} />
@@ -39,17 +37,17 @@ const Home = () => {
         </Col>
       </Row>
       <div className="home-heading-container">
-        <Title level={2} className="home-title">Top 10 Cryptos In The World</Title>
-        <Title level={3} className="show-more">
+        <Typography.Title level={2} className="home-title">Top 10 Cryptos In The World</Typography.Title>
+        <Typography.Title level={3} className="show-more">
           <Link to="/cryptocurrencies">Show more</Link>
-        </Title>
+        </Typography.Title>
       </div>
       <Cryptocurrencies simplified />
       <div className="home-heading-container">
-        <Title level={2} className="home-title">Latest Crypto News</Title>
-        <Title level={3}>
+        <Typography.Title level={2} className="home-title">Latest Crypto News</Typography.Title>
+        <Typography.Title level={3}>
           <Link to="/news">Show more</Link>
-        </Title>
+        </Typography.Title>
       </div>
       <News simplified />
     </>

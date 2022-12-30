@@ -7,7 +7,7 @@ import {
   LoginOutlined,
 } from '@ant-design/icons';
 
-import icon from '../images/logo.png';
+import logo from '../images/logo.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <div className="nav-container">
       <div className="logo-container">
-        <Avatar src={icon} size="large" />
+        <Avatar src={logo} size="large" />
         <Typography.Title level={2} className="logo">
           <Link to="/">BitForecast</Link>
         </Typography.Title>
