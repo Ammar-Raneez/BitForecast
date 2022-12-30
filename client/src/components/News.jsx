@@ -13,13 +13,13 @@ const { Option } = Select;
 
 const News = ({ simplified }) => {
   const [newsCategory, setNewsCategory] = useState('Cryptocurrency');
-  const { data: cryptoDetails } = useGetCryptosQuery(100);
-  const { data: cryptoNews } = useGetCryptoNewsQuery({
+  const { data: cryptoDetails, isFetching: isFetchingCryptos } = useGetCryptosQuery(100);
+  const { data: cryptoNews, isFetching: isFetchingNews } = useGetCryptoNewsQuery({
     newsCategory,
     count: simplified ? 6 : 12
   });
 
-  if (!cryptoNews?.value) return <Loader />;
+  if (isFetchingCryptos || isFetchingNews) return <Loader />;
 
   return (
     <Row gutter={[24, 24]}>
