@@ -1,5 +1,8 @@
-import { Link, Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Layout, Space, Typography } from 'antd';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import {
   Cryptocurrencies,
@@ -9,11 +12,26 @@ import {
   Navbar,
   News,
 } from './components';
+import { login, logout } from './features/userSlice';
+import { auth } from './firebase';
 import './App.css';
 
 function App() {
+  const user = useSelector((state) => state.user?.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(login(user.accessToken));
+      } else {
+        dispatch(logout());
+      }
+    });
+  }, [dispatch]);
+
   return (
-    <div className="app">
+    <div className="app" >
       <div className="navbar">
         <Navbar />
       </div>
@@ -25,7 +43,11 @@ function App() {
               <Route exact path="/cryptocurrencies" element={<Cryptocurrencies />} />
               <Route exact path="/crypto/:coinId" element={<CryptoDetails />} />
               <Route exact path="/news" element={<News />} />
-              <Route exact path="/login" element={<Login />} />
+              {!user?.payload ? (
+                <Route exact path="/login" element={<Login />} />
+              ) : (
+                <Route exact path="/login" element={<Navigate to="/" />} />
+              )}
             </Routes>
           </div>
         </Layout>

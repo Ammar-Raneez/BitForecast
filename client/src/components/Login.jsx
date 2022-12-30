@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
-  Avatar,
   Button,
   Col,
   Divider,
@@ -11,16 +12,30 @@ import {
   Typography,
 } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
+import { login } from '../features/userSlice';
+import { auth } from '../firebase';
 import logo from '../images/logo-secondary.png';
 
 function Login() {
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [errLogin, setErrLogin] = useState(false);
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+  const onFinish = (values) => {
+    setErrLogin(false);
+    const { email, password } = values;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        dispatch(login(user.accessToken));
+        navigate('/');
+      })
+      .catch(() => {
+        setErrLogin(true);
+      });
   };
 
   return (
@@ -50,7 +65,6 @@ function Login() {
             labelCol={{ span: 6 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
             className="login-form"
           >
@@ -60,10 +74,14 @@ function Login() {
               </Typography.Title>
             </Divider>
             <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please enter the username' }]}
+              name="email"
+              rules={[{ required: true, message: 'Please enter the email' }]}
             >
-              <Input prefix={<UserOutlined />} placeholder="Username" />
+              <Input
+                type="email"
+                prefix={<UserOutlined />}
+                placeholder="Email"
+              />
             </Form.Item>
             <Form.Item
               name="password"
@@ -75,6 +93,11 @@ function Login() {
                 placeholder="Password"
               />
             </Form.Item>
+            {errLogin && (
+              <Typography.Text style={{ color: 'red', textAlign: 'center' }}>
+                Invalid email or password
+              </Typography.Text>
+            )}
             <Form.Item style={{ marginBottom: 0 }}>
               <Button type="primary" htmlType="submit" className="login-form-button">
                 Authorize
