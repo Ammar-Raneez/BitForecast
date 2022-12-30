@@ -5,6 +5,7 @@ import {
   Cryptocurrencies,
   CryptoDetails,
   Home,
+  Login,
   Navbar,
   News,
 } from './components';
@@ -24,6 +25,7 @@ function App() {
               <Route exact path="/cryptocurrencies" element={<Cryptocurrencies />} />
               <Route exact path="/crypto/:coinId" element={<CryptoDetails />} />
               <Route exact path="/news" element={<News />} />
+              <Route exact path="/login" element={<Login />} />
             </Routes>
           </div>
         </Layout>
