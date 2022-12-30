@@ -1,0 +1,117 @@
+:root {
+  --text-primary: #000;
+  --bgPrimary: #fff;
+  --bgSecondary: #F9F9F9;
+  --dark-blue: #0071bd;
+  --light-blue: #e6f7ff;
+  --border: #d9d9d9;
+  --bgDark: #001529;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a:hover {
+  color: var(--dark-blue) !important;
+}
+
+.app {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.navbar {
+  flex: 0.2;
+  padding: 0.5rem 1rem;
+  background-color: rgb(0, 21, 41);
+}
+
+.main {
+  flex: 0.8;
+  width: 100%;
+}
+
+.routes {
+  padding: 20px;
+}
+
+.nav-container {
+  display: flex;
+  width: 100%;
+  background-color: var(--bgSecondary);
+}
+
+.logo-container {
+  background-color: var(--bgDark);
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin: 0px 0px 0.3rem 1rem !important;
+}
+
+.logo a {
+  color: white;
+}
+
+.menu-control-container {
+  display: none !important;
+  position: absolute !important;
+  right: 10px !important;
+  top: 25px !important;
+  font-size: 1.2rem !important;
+  background-color: var(--bgSecondary) !important;
+  border: none !important;
+}
+
+@media screen and (max-width: 1050px) {
+  .menu-control-container {
+    display: block !important;
+  }
+
+  .nav-container {
+    height: 6vh;
+    width: 100%;
+    background-color: var(--bgSecondary);
+  }
+
+  .app {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .navbar {
+    flex: 1;
+  }
+
+  .main {
+    flex: 1;
+    margin-left: 0px;
+    margin-right: 10px;
+  }
+}
+
+.footer {
+  background-color: var(--bgDark);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+  .logo-container .logo {
+    display: none;
+  }
+}
