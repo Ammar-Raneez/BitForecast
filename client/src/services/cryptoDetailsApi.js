@@ -1,0 +1,31 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+const cryptoDetailsApiHeaders = {
+  'x-rapidapi-host': process.env.REACT_APP_CRYPTO_RAPIDAPI_HOST,
+  'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY,
+};
+
+const createRequest = (url) => ({ url, headers: cryptoDetailsApiHeaders });
+
+// Create rtk query api
+export const cryptoDetailsApi = createApi({
+  reducerPath: 'cryptoDetailsApi',
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_CRYPTO_API_URL }),
+  endpoints: (builder) => ({
+    getCryptos: builder.query({
+      query: (count) => createRequest(`/coins?limit=${count}`),
+    }),
+    getCryptoDetails: builder.query({
+      query: (coinId) => createRequest(`/coin/${coinId}`),
+    }),
+    getCryptoHistory: builder.query({
+      query: ({ coinId, timeperiod }) => createRequest(`coin/${coinId}/history?timePeriod=${timeperiod}`),
+    }),
+  }),
+});
+
+export const {
+  useGetCryptosQuery,
+  useGetCryptoDetailsQuery,
+  useGetCryptoHistoryQuery,
+} = cryptoDetailsApi;
