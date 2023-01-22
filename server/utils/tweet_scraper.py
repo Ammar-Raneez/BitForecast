@@ -62,8 +62,7 @@ def scrape_tweets(dates):
                     break
                 if not tweets_list.get(date):
                     tweets_list[date] = []
-
-                tweets_list[date].append([tweet.date, tweet.username, tweet.content])
+                tweets_list[date].append([tweet.date, tweet.user.username, tweet.rawContent])
         except Exception as e:
             print(f'Error: {e}')
 
@@ -108,7 +107,7 @@ def clean_tweets(dates):
 
         L = []
         for row in df['text']:
-            # Use WTL to remove any non-english observations
+            # Use lingua to remove any non-english observations
             if len(row) != 0:
                 L.append(detector.detect_language_of(row))
             else:
