@@ -2,7 +2,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from tqdm import tqdm
 
-FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets'
+FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete_sentiment_unweighed'
 
 def preprocess(text):
     '''
