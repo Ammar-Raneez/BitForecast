@@ -1,6 +1,6 @@
 '''
 This script will utilize the scrapers and the available scripts to update all
-the available data being used and in turn created the updated final dataset 
+the available data being used and in turn create the updated final dataset 
 '''
 
 import time
