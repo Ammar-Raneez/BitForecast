@@ -78,3 +78,4 @@ def condense_tweets(dfs):
     print('\nRunning tweet condensation...', end='\n')
     condensed_df = condense(dfs)
     export_data(condensed_df)
+    print('\nTweet condensation performed', end='\n')

@@ -114,7 +114,7 @@ def clean_tweets(dates):
                 L.append(None)
 
         df['lang'] = L
-        df_filtered = df[df['lang'] == Language.ENGLISH]
+        df_filtered = df.loc[df.loc[:, 'lang'] == Language.ENGLISH].copy(deep=True)
         df_filtered.drop(['lang'], axis=1, inplace=True)
         filename = str(df.iloc[0]['timestamp'])
         df_filtered.to_csv(f'{FOLDER_PATH}/{filename}.csv')
@@ -126,16 +126,16 @@ def update_tweets():
     Main runner
     '''
 
+    print('\nRunning tweet scraper...', end='\n')
     today, latest_date, dates = get_dates()
     scraped_dfs = clean_tweets(dates)
-    return scraped_dfs
+    sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
+    condense_tweets(sentiment_analyzed_dfs)
+    print('\nTweet data and sentiments updated', end='\n')
 
 if __name__ == '__main__':
     '''
     Scrape tweets, analyze sentiments and condense tweets
     '''
 
-    print('\nRunning tweet scraper...', end='\n')
-    scraped_dfs = update_tweets()
-    sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
-    condense_tweets(sentiment_analyzed_dfs)
+    update_tweets()

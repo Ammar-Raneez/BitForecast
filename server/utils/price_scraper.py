@@ -52,10 +52,12 @@ def update_prices():
     Main runner
     '''
 
+    print('\nRunning historical prices scraper...', end='\n')
     today = datetime.now().strftime('%m/%d/%Y')
     prices = get_crypto_data('01/01/2014', today)
     df = clean_data(prices)
     export_data(df)
+    print('\nHistorical prices data updated', end='\n')
 
 if __name__ == '__main__':
     update_prices()

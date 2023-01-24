@@ -66,8 +66,10 @@ def update_tweet_volume():
     Main runner
     '''
 
+    print('\nRunning twitter volume scraper...', end='\n')
     df = create_dataframe()
     export_data(df)
+    print('\nTwitter volume updated', end='\n')
 
 if __name__ == '__main__':
     update_tweet_volume()

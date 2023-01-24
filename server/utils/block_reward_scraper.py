@@ -66,8 +66,10 @@ def update_block_reward():
     Main runner
     '''
 
+    print('\nRunning block reward scraper...', end='\n')
     df = create_dataframe()
     export_data(df)
+    print('\nBlock reward data updated', end='\n')
 
 if __name__ == '__main__':
     update_block_reward()

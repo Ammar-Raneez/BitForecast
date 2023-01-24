@@ -93,8 +93,10 @@ def update_trends():
     Main runner
     '''
 
+    print('\nRunning google trends scraper...', end='\n')
     df = update_data()
     export_data(df)
+    print('\nGoogle trends data updated', end='\n')
 
 if __name__ == '__main__':
     update_trends()

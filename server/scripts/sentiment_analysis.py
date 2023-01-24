@@ -85,4 +85,5 @@ def analyze_sentiments(dfs):
 
     print('\nRunning sentiment analysis...', end='\n')
     sentiment_analyzed_dfs = analyze_sentiment(dfs)
+    print('\nTweet sentiment analysis performed', end='\n')
     return sentiment_analyzed_dfs

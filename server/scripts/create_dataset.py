@@ -120,6 +120,7 @@ def create_final_dataset():
     print('\nRunning final dataset creation...', end='\n')
     combined_df = create_combined_dataset()
     export_data(combined_df)
+    print('\nFinal dataset created', end='\n')
 
 if __name__ == '__main__':
     create_final_dataset()
