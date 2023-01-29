@@ -1,6 +1,9 @@
 venv 
 ml/data
 .ipynb_checkpoints
+model_checkpoints
+models
+tensorboard_logs
 ml/notebooks/sentiment_analysis/cardiffnlp
 __pycache__
 
