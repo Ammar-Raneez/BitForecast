@@ -99,10 +99,19 @@ def clean_tweets(dates):
     Clean tweets that have empty records and non-english tweets
     '''
 
+    print('Scraping tweets...')
     tweets_list = scrape_tweets(dates)
+    print('Tweets scraped')
     scraped_dfs = process_tweets(tweets_list)
 
-    for df in scraped_dfs:
+    print('Cleaning tweets...')
+    for i, df in enumerate(tqdm(scraped_dfs)):
+        if df.iloc[0].get('timestamp'):
+            filename = str(df.iloc[0]['timestamp'])
+        else:
+            filename = str(df.iloc[0]['date'])
+
+        print(f'Currently at df: {i+1} | {filename}')
         df.dropna(subset=['user', 'timestamp', 'text'], inplace=True)
 
         L = []
@@ -116,9 +125,9 @@ def clean_tweets(dates):
         df['lang'] = L
         df_filtered = df.loc[df.loc[:, 'lang'] == Language.ENGLISH].copy(deep=True)
         df_filtered.drop(['lang'], axis=1, inplace=True)
-        filename = str(df.iloc[0]['timestamp'])
         df_filtered.to_csv(f'{FOLDER_PATH}/{filename}.csv')
 
+    print('Tweets cleaned')
     return scraped_dfs
 
 def update_tweets():
