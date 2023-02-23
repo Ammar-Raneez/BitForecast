@@ -2,6 +2,11 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask import Flask, request
 
+import sys
+sys.path.append( '.' )
+
+from server.scripts.update_data import update_data
+
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
@@ -22,6 +27,11 @@ def multivariate():
   inputs = request.get_json()
   print(inputs)
   return 'Multivariate API'
+
+@app.route('/api/v1/data/update', methods=['GET'])
+def update_data():
+  update_data()
+  return 'Data updated'
 
 if __name__ == '__main__':
   app.run()
