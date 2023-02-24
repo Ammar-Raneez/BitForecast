@@ -1,5 +1,5 @@
 '''
-This file handles univariate forecasting
+This file handles multivariate forecasting
 '''
 
 import sys
@@ -15,8 +15,8 @@ from server.api.common import *
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
-BTC_PRICES_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_univariate_complete'
+COMBINED_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/combined_data.csv'
+ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
 
 def create_dataset():
   '''
@@ -24,10 +24,10 @@ def create_dataset():
   '''
 
   # Import data
-  data = pd.read_csv(BTC_PRICES_DATA)
+  data = pd.read_csv(COMBINED_DATA)
 
   # Clean up data
-  data.drop(['volume', 'open', 'max', 'min', 'change_percent'], axis=1, inplace=True)
+  data.drop(['Unnamed: 0'], axis=1, inplace=True)
   data['date'] = pd.to_datetime(data['date'])
   data.set_index('date', inplace=True)
   data.rename(columns={ 'close': 'Price' }, inplace=True)
@@ -46,72 +46,67 @@ def create_dataset():
   labels_dataset_all = tf.data.Dataset.from_tensor_slices(y_all)
   dataset_all = tf.data.Dataset.zip((features_dataset_all, labels_dataset_all))
   dataset_all = dataset_all.batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
-  return data, y_all, dataset_all
 
-def create_univariate_ensemble():
+  return {
+    'data': data,
+    'data_windowed': data_windowed,
+    'y_all': y_all,
+    'x_all': x_all,
+    'dataset_all': dataset_all,
+  }
+
+def create_multivariate_ensemble():
   '''
-  Create the univariate ensemble model (for the case of retraining)
+  Create the multivariate ensemble model (for the case of retraining)
   '''
 
-  _, _, dataset_all = create_dataset()
-  ensemble = create_ensemble(dataset_all)
+  data = create_dataset()
+  ensemble = create_ensemble(data['data'])
   save_ensemble(ensemble, ENSEMBLE_PATH)
   return ensemble
 
 def make_future_forecasts(
   values,
   ensemble,
-  into_future,
   window_size=WINDOW_SIZE
 ):
   '''
-  Make future perdictions
+  Make future perdiction
   '''
 
   future_forecast = []
 
-  # Predict {into_future} times with all models in the ensemble
   for i, model in enumerate(ensemble):
-    model_forecast = []
     last_window = values[-window_size:] # last {WINDOW_SIZE} prices
-    for _ in range(into_future):
-      future_pred = tf.squeeze(
-        model.predict(tf.expand_dims(last_window, axis=0))
-      ).numpy()
+    future_pred = tf.squeeze(
+      model.predict(last_window)
+    ).numpy()[-1]
 
-      print(f'Model {i} -> Prediction: {future_pred}')
-
-      # Update future forecast list
-      model_forecast.append(future_pred)
-
-      # Update last window: append latest and take last {WINDOW_SIZE} values
-      last_window = np.append(last_window, future_pred)[-window_size:]
-
-    future_forecast.append(model_forecast)
+    print(f'Model {i} -> Prediction: {future_pred}')
+    future_forecast.append([future_pred])
 
   return future_forecast
 
-def univariate_forecast(into_future=5):
+def multivariate_forecast():
   '''
   Create the forecast
   '''
 
-  raw_data, y_all, _ = create_dataset()
+  data = create_dataset()
   ensemble = load_ensemble(ENSEMBLE_PATH)
 
   future_forecast = make_future_forecasts(
-    values=y_all,
+    values=data['x_all'],
     ensemble=ensemble,
-    into_future=into_future,
     window_size=WINDOW_SIZE
   )
 
-  # last_timestep = raw_data.index[-1]
-  # last_price = raw_data['Price'][-1]
+  # last_timestep = data['data'].index[-1]
+  # last_price = data['data']['Price'][-1]
 
   next_time_steps = get_future_dates(
-    start_date=raw_data.index[-1], 
-    into_future=into_future
+    start_date=data['data'].index[-1], 
+    into_future=1
   )
 
   point_future = np.median(future_forecast, axis=0)

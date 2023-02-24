@@ -1,9 +1,22 @@
+'''
+This file contains common utility functions that are used in multivariate.py and univariate.py
+'''
+
+import numpy as np
 import tensorflow as tf
 import os
 
-from server.utils.lts import LTSCell
+from server.algorithms.lts import LTSCell
 
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_univariate_complete'
+def get_future_dates(start_date, into_future, offset=1):
+  '''
+  Return dates from start_date to start_date + into_future
+  Creates the dates of which the forecast was made
+  '''
+
+  start_date = start_date + np.timedelta64(offset, 'D')
+  end_date = start_date + np.timedelta64(into_future, 'D')
+  return np.arange(start_date, end_date, dtype='datetime64[D]')
 
 def get_upper_lower_bounds(preds):
   '''
@@ -18,20 +31,20 @@ def get_upper_lower_bounds(preds):
   lower, upper = preds_mean - interval, preds_mean + interval
   return lower, upper
 
-def save_ensemble(ensemble):
+def save_ensemble(ensemble, path):
   '''
   Save ensemble
   '''
 
   for i, model in enumerate(ensemble):
-    model.save(f'{ENSEMBLE_PATH}/model_{i}')
+    model.save(f'{path}/model_{i}')
 
-def load_ensemble():
+def load_ensemble(path):
   '''
   Load ensemble
   '''
 
-  ensemble = [tf.keras.models.load_model(f'{ENSEMBLE_PATH}/{model}') for model in os.listdir(ENSEMBLE_PATH)]
+  ensemble = [tf.keras.models.load_model(f'{path}/{model}') for model in os.listdir(path)]
   return ensemble
 
 def create_ensemble(
