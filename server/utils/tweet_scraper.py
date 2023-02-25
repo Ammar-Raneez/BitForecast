@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from lingua import Language, LanguageDetectorBuilder
@@ -6,12 +9,8 @@ import datetime
 import os
 from tqdm import tqdm
 
-# Hack to import modules from another directory
-import sys
-sys.path.append( '.' )
-
-from server.scripts.sentiment_analysis import analyze_sentiments
-from server.scripts.tweet_condenser import condense_tweets
+from scripts.sentiment_analysis import analyze_sentiments
+from scripts.tweet_condenser import condense_tweets
 
 FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete'
 detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.GERMAN).build()

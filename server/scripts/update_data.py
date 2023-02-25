@@ -3,17 +3,17 @@ This script will utilize the scrapers and the available scripts to update all
 the available data being used and in turn create the updated final dataset 
 '''
 
+import sys
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+
 import time
 
-import sys
-sys.path.append( '.' )
-
-from server.utils.price_scraper import update_prices
-from server.utils.block_reward_scraper import update_block_reward
-from server.utils.gtrends_scraper import update_trends
-from server.utils.tweet_volume_scraper import update_tweet_volume
-from server.utils.tweet_scraper import update_tweets
-from server.scripts.create_dataset import create_final_dataset
+from utils.price_scraper import update_prices
+from utils.block_reward_scraper import update_block_reward
+from utils.gtrends_scraper import update_trends
+from utils.tweet_volume_scraper import update_tweet_volume
+from utils.tweet_scraper import update_tweets
+from scripts.create_dataset import create_final_dataset
 
 def update_data():
   '''

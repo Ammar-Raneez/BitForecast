@@ -3,14 +3,14 @@ This file handles multivariate forecasting
 '''
 
 import sys
-sys.path.append( '.' )
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
 
 import numpy as np
 import pandas as pd
 
 import tensorflow as tf
 
-from server.api.common import *
+from api.common import *
 
 HORIZON = 1
 WINDOW_SIZE = 7
