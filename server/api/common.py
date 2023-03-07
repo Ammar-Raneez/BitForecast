@@ -68,21 +68,21 @@ def create_ensemble(
     for loss_fn in loss_fns:
       print(f'Model loss: {loss_fn} | model number: {i}')
       model = tf.keras.Sequential([
-        tf.keras.layers.Input(
-          shape=(window_size)
-        ),
-        tf.keras.layers.Lambda(
-          lambda x: tf.expand_dims(x, axis=1)
-        ),
-        tf.keras.layers.RNN(
-          LTSCell(16),
-          time_major=True,
-          return_sequences=True
-        ),
-        tf.keras.layers.LSTM(
-          16,
-          activation='relu'
-        ),
+        # tf.keras.layers.Input(
+        #   shape=(window_size)
+        # ),
+        # tf.keras.layers.Lambda(
+        #   lambda x: tf.expand_dims(x, axis=1)
+        # ),
+        # tf.keras.layers.RNN(
+        #   LTSCell(16),
+        #   time_major=True,
+        #   return_sequences=True
+        # ),
+        # tf.keras.layers.LSTM(
+        #   16,
+        #   activation='relu'
+        # ),
         tf.keras.layers.Dense(
           128,
           kernel_initializer='he_normal',       #Required for the prediction intervals
