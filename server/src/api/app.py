@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
 
 from flask_cors import CORS
 from flask_restful import Api

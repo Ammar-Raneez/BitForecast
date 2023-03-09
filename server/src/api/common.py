@@ -3,7 +3,7 @@ This file contains common utility functions that are used in multivariate.py and
 '''
 
 import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
 
 import numpy as np
 import tensorflow as tf

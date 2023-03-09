@@ -4,7 +4,7 @@ the available data being used and in turn create the updated final dataset
 '''
 
 import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
 
 import time
 

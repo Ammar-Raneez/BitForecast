@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
+sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
 
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
