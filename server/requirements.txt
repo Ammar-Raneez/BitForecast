@@ -61,3 +61,4 @@ urllib3==1.26.13
 vaderSentiment==3.3.2
 Werkzeug==2.2.3
 wrapt==1.14.1
+-e .
