@@ -2,21 +2,18 @@
 This file handles multivariate forecasting
 '''
 
-import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
-
 import numpy as np
 import pandas as pd
 
 import tensorflow as tf
 
-from api.common import *
+from common import *
 
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
 COMBINED_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/combined_data.csv'
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/src/models/ensemble_multivariate_complete'
+ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
 
 def create_dataset():
   '''

@@ -1,13 +1,10 @@
-import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
-
 from flask_cors import CORS
 from flask_restful import Api
 from flask import abort, Flask, jsonify, make_response, request
 
-from scripts.update_data import update_data
-from api.univariate import univariate_forecast, create_univariate_ensemble
-from api.multivariate import multivariate_forecast, create_multivariate_ensemble
+from update_data import update_data
+from univariate import univariate_forecast, create_univariate_ensemble
+from multivariate import multivariate_forecast, create_multivariate_ensemble
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'

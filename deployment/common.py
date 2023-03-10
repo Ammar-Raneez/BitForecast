@@ -2,14 +2,11 @@
 This file contains common utility functions that are used in multivariate.py and univariate.py
 '''
 
-import sys
-sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server/src')
-
 import numpy as np
 import tensorflow as tf
 import os
 
-from algorithms.lts import LTSCell
+from lts import LTSCell
 
 def get_future_dates(start_date, into_future, offset=1):
   '''
