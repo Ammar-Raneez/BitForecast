@@ -10,7 +10,7 @@ import time
 
 from utils.price_scraper import update_prices
 from utils.block_reward_scraper import update_block_reward
-from utils.gtrends_scraper import update_trends
+from utils.trends_scraper import update_trends
 from utils.tweet_volume_scraper import update_tweet_volume
 from utils.tweet_scraper import update_tweets
 from scripts.create_dataset import create_final_dataset

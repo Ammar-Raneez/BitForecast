@@ -1,3 +1,8 @@
+'''
+This API is abandoned by the author as of March 10th 2023.
+Due to Google blocking the IP address and rate limitations.
+'''
+
 from pytrends.request import TrendReq
 import pandas as pd
 import numpy as np
