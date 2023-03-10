@@ -59,5 +59,8 @@ def update_prices():
     export_data(df)
     print('\nHistorical prices data updated', end='\n')
 
+    # Return for script
+    return df
+
 if __name__ == '__main__':
     update_prices()

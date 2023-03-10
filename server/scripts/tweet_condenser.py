@@ -79,3 +79,5 @@ def condense_tweets(dfs):
     condensed_df = condense(dfs)
     export_data(condensed_df)
     print('\nTweet condensation performed', end='\n')
+
+    return condensed_df

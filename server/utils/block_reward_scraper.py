@@ -71,5 +71,8 @@ def update_block_reward():
     export_data(df)
     print('\nBlock reward data updated', end='\n')
 
+    # Return for script
+    return df
+
 if __name__ == '__main__':
     update_block_reward()

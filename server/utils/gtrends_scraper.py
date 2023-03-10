@@ -98,5 +98,8 @@ def update_trends():
     export_data(df)
     print('\nGoogle trends data updated', end='\n')
 
+    # Return for script
+    return df
+
 if __name__ == '__main__':
     update_trends()
