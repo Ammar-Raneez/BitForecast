@@ -1,4 +1,4 @@
-Contains the API content of the application
+Contains the API content of the application. For local testing purposes
 
 * `multivariate.py` - handles multivariate forecasting
 * `univariate.py` - handles univariate forecasting
