@@ -138,8 +138,11 @@ def update_tweets():
     today, latest_date, dates = get_dates()
     scraped_dfs = clean_tweets(dates)
     sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
-    condense_tweets(sentiment_analyzed_dfs)
+    condensed_tweets = condense_tweets(sentiment_analyzed_dfs)
     print('\nTweet data and sentiments updated', end='\n')
+
+    # Return for scripts
+    return condensed_tweets
 
 if __name__ == '__main__':
     '''

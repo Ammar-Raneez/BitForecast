@@ -71,5 +71,8 @@ def update_tweet_volume():
     export_data(df)
     print('\nTwitter volume updated', end='\n')
 
+    # Return for script
+    return df
+
 if __name__ == '__main__':
     update_tweet_volume()

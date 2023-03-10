@@ -21,18 +21,12 @@ def update_data():
   '''
 
   print('\nRunning data update script...', end='\n')
-  scripts = [
-    update_prices,
-    update_block_reward,
-    update_trends,
-    update_tweet_volume,
-    update_tweets,
-    create_final_dataset
-  ]
-
-  for script in scripts:
-    script()
-    time.sleep(2)
+  prices = update_prices()
+  block_reward = update_block_reward()
+  tweet_volume = update_tweet_volume()
+  tweets = update_tweets()
+  trends = update_trends()
+  create_final_dataset(prices, block_reward, trends, tweet_volume, tweets)
 
   print('\nData update script completed', end='\n')
 
