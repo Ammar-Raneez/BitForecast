@@ -139,13 +139,26 @@ def export_data(df):
 
     df.to_csv(OUTPUT_PATH)
 
-def create_final_dataset():
+def create_final_dataset(
+    prices = None,
+    block_reward = None,
+    trends = None,
+    tweet_volume = None,
+    tweets = None
+):
     '''
     Main runner
     '''
 
     print('\nRunning final dataset creation...', end='\n')
-    combined_df = create_combined_dataset()
+    combined_df = create_combined_dataset(
+        prices,
+        block_reward,
+        trends,
+        tweet_volume,
+        tweets
+    )
+
     export_data(combined_df)
     print('\nFinal dataset created', end='\n')
 

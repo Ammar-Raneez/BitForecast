@@ -5,7 +5,7 @@ the available data being used and in turn create the updated final dataset
 
 from price_scraper import update_prices
 from block_reward_scraper import update_block_reward
-from gtrends_scraper import update_trends
+from trends_scraper import update_trends
 from tweet_volume_scraper import update_tweet_volume
 from tweet_scraper import update_tweets
 from create_dataset import create_final_dataset

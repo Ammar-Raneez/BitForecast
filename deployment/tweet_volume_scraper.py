@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
+from mongodb import init_mongodb
+
 URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
-FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Volume.csv'
 
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -59,7 +60,11 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv(FILE_PATH)
+    # Store datasets in mongodb for any requirements in production
+    df.index = df.index.astype(str)
+    df_dict = df.to_dict('index')
+    dataset_db = init_mongodb()
+    dataset_db['Twitter Volume'].insert_one(df_dict)
 
 def update_tweet_volume():
     '''

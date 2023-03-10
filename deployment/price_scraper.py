@@ -2,9 +2,10 @@ import requests
 import pandas as pd
 from datetime import datetime
 
+from mongodb import init_mongodb
+
 # API reference: http://api.scraperlink.com/investpy/
 BASE_URL = 'http://api.scraperlink.com/investpy/?email=your@email.com&type=historical_data&product=cryptos&symbol=BTC'
-FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
 
 def get_crypto_data(start, end):
     '''
@@ -45,7 +46,11 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv(FILE_PATH)
+    # Store datasets in mongodb for any requirements in production
+    df.index = df.index.astype(str)
+    df_dict = df.to_dict('index')
+    dataset_db = init_mongodb()
+    dataset_db['Bitcoin Prices'].insert_one(df_dict)
 
 def update_prices():
     '''

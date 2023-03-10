@@ -5,7 +5,7 @@ import re
 
 from mongodb import init_mongodb
 
-URL = 'https://bitinfocharts.com/comparison/fee_to_reward-btc.html#alltime'
+URL = 'https://bitinfocharts.com/comparison/google_trends-btc.html#alltime'
 
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -24,11 +24,11 @@ def parse(string_list):
 
 def process_scripts():
     '''
-    Scrape URL script tag and extract block reward & respective date
+    Scrape URL script tag and extract trends & respective date
     '''
 
     dates = []
-    sizes = []
+    trends = []
 
     for script in scripts:
         if 'd = new Dygraph(document.getElementById("container")' in script.text:
@@ -42,17 +42,17 @@ def process_scripts():
         if (data.index(each) % 2) == 0:
             dates.append(each)
         else:
-            sizes.append(each)
+            trends.append(each)
 
-    return dates, sizes
+    return dates, trends
 
 def create_dataframe():
     '''
-    Create dataframe from scraped block reward sizes and dates
+    Create dataframe from scraped trends and dates
     '''
 
-    dates, sizes = process_scripts()
-    df = pd.DataFrame(list(zip(dates, sizes)), columns=['Date', 'Block Reward Size'])
+    dates, trends = process_scripts()
+    df = pd.DataFrame(list(zip(dates, trends)), columns=['Date', 'bitcoin_unscaled'])
     return df
 
 def export_data(df):
@@ -64,20 +64,17 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Block Reward'].insert_one(df_dict)
+    dataset_db['Google Trends'].insert_one(df_dict)
 
-def update_block_reward():
+def update_trends():
     '''
     Main runner
     '''
 
-    print('\nRunning block reward scraper...', end='\n')
+    print('\nRunning Google Trends scraper...', end='\n')
     df = create_dataframe()
     export_data(df)
-    print('\nBlock reward data updated', end='\n')
-
-    # Return for script
-    return df
+    print('\nGoogle Trends data updated', end='\n')
 
 if __name__ == '__main__':
-    update_block_reward()
+    update_trends()
