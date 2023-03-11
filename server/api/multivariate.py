@@ -27,7 +27,7 @@ def create_dataset():
   data = pd.read_csv(COMBINED_DATA)
 
   # Clean up data
-  data.drop(['Unnamed: 0'], axis=1, inplace=True)
+  data = data[['date', 'volume', 'close', 'change_percent', 'Block Reward Size', 'bitcoin_unscaled', 'Tweet Volume', 'compound_score']]
   data['date'] = pd.to_datetime(data['date'])
   data.set_index('date', inplace=True)
   data.rename(columns={ 'close': 'Price' }, inplace=True)
