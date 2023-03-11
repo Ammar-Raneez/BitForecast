@@ -8,20 +8,24 @@ import pandas as pd
 import tensorflow as tf
 
 from common import *
+from util.mongodb import init_mongodb, BTC_PRICES_COLLECTION
 
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
-BTC_PRICES_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_univariate_complete'
+ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/deployment/src/models/ensemble_univariate_complete'
 
 def create_dataset():
   '''
   Create the required dataset format (Windowing, Cleaning & Spitting)
   '''
 
-  # Import data
-  data = pd.read_csv(BTC_PRICES_DATA)
+  # Import data from MongoDB
+  db = init_mongodb()
+  prices = db[BTC_PRICES_COLLECTION].find_one()
+  del prices['_id']
+  data = pd.DataFrame.from_dict(prices, orient='index')
+  print('Data successfully imported from MongoDB')
 
   # Clean up data
   data.drop(['volume', 'open', 'max', 'min', 'change_percent'], axis=1, inplace=True)

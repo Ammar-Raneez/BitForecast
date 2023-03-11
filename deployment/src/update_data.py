@@ -25,3 +25,4 @@ def update_data():
   create_final_dataset(prices, block_reward, trends, tweet_volume, tweets)
 
   print('\nData update script completed', end='\n')
+  print('Data successfully saved into MongoDB')
