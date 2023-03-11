@@ -6,8 +6,8 @@ import datetime
 import os
 from tqdm import tqdm
 
-from sentiment_analysis import analyze_sentiments
-from tweet_condenser import condense_tweets
+from utils.sentiment_analysis import analyze_sentiments
+from utils.tweet_condenser import condense_tweets
 
 FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete'
 detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.GERMAN).build()
@@ -140,10 +140,3 @@ def update_tweets():
 
     # Return for scripts
     return condensed_tweets
-
-if __name__ == '__main__':
-    '''
-    Scrape tweets, analyze sentiments and condense tweets
-    '''
-
-    update_tweets()

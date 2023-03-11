@@ -57,6 +57,7 @@ def condense(dfs):
 
     # Remove duplicate dates
     condensed_combined_df = condensed_combined_df[~condensed_combined_df.date.duplicated(keep='first')]
+    condensed_combined_df['date'] = condensed_combined_df['date'].astype(str)
 
     # Filter only required columns
     condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]

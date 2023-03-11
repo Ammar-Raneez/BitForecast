@@ -1,11 +1,11 @@
-import requests
+import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from mongodb import init_mongodb
+from utils.mongodb import init_mongodb
 
-URL = 'https://bitinfocharts.com/comparison/google_trends-btc.html#alltime'
+URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
 
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -24,11 +24,11 @@ def parse(string_list):
 
 def process_scripts():
     '''
-    Scrape URL script tag and extract trends & respective date
+    Scrape URL script tag and extract tweet volume & respective date
     '''
 
     dates = []
-    trends = []
+    tweets = []
 
     for script in scripts:
         if 'd = new Dygraph(document.getElementById("container")' in script.text:
@@ -42,17 +42,17 @@ def process_scripts():
         if (data.index(each) % 2) == 0:
             dates.append(each)
         else:
-            trends.append(each)
+            tweets.append(each)
 
-    return dates, trends
+    return dates, tweets
 
 def create_dataframe():
     '''
-    Create dataframe from scraped trends and dates
+    Create dataframe from scraped twitter volume and dates
     '''
 
-    dates, trends = process_scripts()
-    df = pd.DataFrame(list(zip(dates, trends)), columns=['Date', 'bitcoin_unscaled'])
+    dates, tweets = process_scripts()
+    df = pd.DataFrame(list(zip(dates, tweets)), columns=['Date', 'Tweet Volume'])
     return df
 
 def export_data(df):
@@ -64,17 +64,18 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Google Trends'].insert_one(df_dict)
+    dataset_db['Twitter Volume'].delete_many({})
+    dataset_db['Twitter Volume'].insert_one(df_dict)
 
-def update_trends():
+def update_tweet_volume():
     '''
     Main runner
     '''
 
-    print('\nRunning Google Trends scraper...', end='\n')
+    print('\nRunning twitter volume scraper...', end='\n')
     df = create_dataframe()
     export_data(df)
-    print('\nGoogle Trends data updated', end='\n')
+    print('\nTwitter volume updated', end='\n')
 
-if __name__ == '__main__':
-    update_trends()
+    # Return for script
+    return df

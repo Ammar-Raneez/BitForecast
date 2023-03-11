@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import os
 
-from lts import LTSCell
+from utils.lts import LTSCell
 
 def get_future_dates(start_date, into_future, offset=1):
   '''

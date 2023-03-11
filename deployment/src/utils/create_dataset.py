@@ -1,69 +1,76 @@
 import pandas as pd
 
-TRENDS_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/GTrends/BTC_GTrends_total_cleaned.csv'
-TWEETS_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
-TWEET_VOLUME_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Volume.csv'
-BLOCK_REWARD_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Block_Reward.csv'
-BTC_PRICES_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
+from utils.mongodb import init_mongodb
 
-OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/combined_data.csv'
-
-def get_prices(historical_prices = None):
+def get_prices(historical_prices):
     '''
     Load and clean historical prices dataset
     '''
 
-    if not historical_prices:
-        historical_prices = pd.read_csv(BTC_PRICES_DATA)
+    # Safe check to remove a column that comes sometimes
+    try:
+        historical_prices.drop(['Unnamed: 0'], axis=1, inplace=True)
+    except:
+        pass
 
     historical_prices.drop(['max', 'min', 'open'], axis=1, inplace=True)
     filtered_prices = historical_prices.loc[~(historical_prices.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
     return filtered_prices
 
-def get_twitter_volume(twitter_volume = None):
+def get_twitter_volume(twitter_volume):
     '''
     Load and clean twitter volume dataset
     '''
 
-    if not twitter_volume:
-        twitter_volume = pd.read_csv(TWEET_VOLUME_DATA)
+    # Safe check to remove a column that comes sometimes
+    try:
+        twitter_volume.drop(['Unnamed: 0'], axis=1, inplace=True)
+    except:
+        pass
 
-    twitter_volume.drop(['Unnamed: 0'], axis=1, inplace=True)
     filtered_t_volume = twitter_volume.loc[~(twitter_volume.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_t_volume
 
-def get_block_reward(block_reward = None):
+def get_block_reward(block_reward):
     '''
     Load and clean block reward dataset
     '''
 
-    if not block_reward:
-        block_reward = pd.read_csv(BLOCK_REWARD_DATA)
+    # Safe check to remove a column that comes sometimes
+    try:
+        block_reward.drop(['Unnamed: 0'], axis=1, inplace=True)
+    except:
+        pass
 
-    block_reward.drop(['Unnamed: 0'], axis=1, inplace=True)
     filtered_block_reward = block_reward.loc[~(block_reward.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_block_reward
 
-def get_google_trends(gtrends = None):
+def get_google_trends(gtrends):
     '''
     Load and clean google trends dataset
     '''
 
-    if not gtrends:
-        gtrends = pd.read_csv(TRENDS_DATA)
+    # Safe check to remove a column that comes sometimes
+    try:
+        gtrends.drop(['Unnamed: 0'], axis=1, inplace=True)
+    except:
+        pass
 
-    filtered_gtrends = gtrends.loc[~(gtrends.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
+    filtered_gtrends = gtrends.loc[~(gtrends.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_gtrends
 
-def get_twitter_sentiment(twitter_sentiments = None):
+def get_twitter_sentiment(twitter_sentiments):
     '''
     Load and clean twitter sentiment dataset
     '''
 
-    if not twitter_sentiments:
-        twitter_sentiments = pd.read_csv(TWEETS_DATA)
+    # Safe check to remove a column that comes sometimes
+    try:
+        twitter_sentiments.drop(['Unnamed: 0'], axis=1, inplace=True)
+    except:
+        pass
 
-    twitter_sentiments.drop(['Unnamed: 0', 'negative_score', 'neutral_score', 'positive_score'], axis=1, inplace=True)
+    twitter_sentiments.drop(['negative_score', 'neutral_score', 'positive_score'], axis=1, inplace=True)
     filtered_twitter_sentiments = twitter_sentiments.loc[~(twitter_sentiments.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
     return filtered_twitter_sentiments
 
@@ -80,13 +87,13 @@ def get_exogenous_datasets(
     filtered_block_reward = get_block_reward(block_reward)
     filtered_gtrends = get_google_trends(trends)
     filtered_twitter_volume = get_twitter_volume(tweet_volume)
-    filtered_twitter_sentiments = get_twitter_sentiment(tweets)
+    # filtered_twitter_sentiments = get_twitter_sentiment(tweets)
 
     exogenous_features = [
         filtered_block_reward,
         filtered_gtrends,
         filtered_twitter_volume,
-        filtered_twitter_sentiments
+        # filtered_twitter_sentiments
     ]
 
     for i in exogenous_features:
@@ -98,11 +105,11 @@ def get_exogenous_datasets(
     return exogenous_features
 
 def create_combined_dataset(
-    prices = None,
-    block_reward = None,
-    trends = None,
-    tweet_volume = None,
-    tweets = None
+    prices,
+    block_reward,
+    trends,
+    tweet_volume,
+    tweets
 ):
     '''
     Create and clean the final combined dataset
@@ -130,6 +137,7 @@ def create_combined_dataset(
 
     # Impute missing values with the respective columns mean
     combined_df.fillna(combined_df.mean(numeric_only=True), inplace=True)
+    combined_df['date'] = pd.to_datetime(combined_df['date'])
     return combined_df
 
 def export_data(df):
@@ -137,14 +145,19 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv(OUTPUT_PATH)
+    # Store datasets in mongodb for any requirements in production
+    df.index = df.index.astype(str)
+    df_dict = df.to_dict('index')
+    dataset_db = init_mongodb()
+    dataset_db['Final Dataset'].delete_many({})
+    dataset_db['Final Dataset'].insert_one(df_dict)
 
 def create_final_dataset(
-    prices = None,
-    block_reward = None,
-    trends = None,
-    tweet_volume = None,
-    tweets = None
+    prices,
+    block_reward,
+    trends,
+    tweet_volume,
+    tweets
 ):
     '''
     Main runner
@@ -161,6 +174,3 @@ def create_final_dataset(
 
     export_data(combined_df)
     print('\nFinal dataset created', end='\n')
-
-if __name__ == '__main__':
-    create_final_dataset()
