@@ -3,13 +3,12 @@ import pandas as pd
 from lingua import Language, LanguageDetectorBuilder
 
 import datetime
-import os
 from tqdm import tqdm
 
-from utils.sentiment_analysis import analyze_sentiments
-from utils.tweet_condenser import condense_tweets
+from util.sentiment_analysis import analyze_sentiments
+from util.tweet_condenser import condense_tweets
+from util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
 
-FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete'
 detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.GERMAN).build()
 
 def dt(x):
@@ -20,13 +19,27 @@ def dt(x):
     t = pd.Timestamp(x)
     return pd.Timestamp.date(t)
 
+def read_mongo_dates():
+    '''
+    Read existing sentiments' dates from MongoDB
+    '''
+
+    db = init_mongodb()
+    sentiments = db[TWITTER_SENTIMENTS_COLLECTION].find_one()
+
+    # first value is the document id 
+    del sentiments['_id']
+
+    # Extract date fields
+    return [sentiment['date'] for sentiment in sentiments.values()]
+
 def get_dates():
     '''
     Get list of dates that must be scraped
     '''
 
     today =  datetime.datetime.today().strftime('%Y-%m-%d')
-    latest_date = max([i.replace('.csv', '') for i in os.listdir(FOLDER_PATH)[:-1]])
+    latest_date = max(read_mongo_dates())
 
     # From dates after including date (don't refetch latest date)
     from_date = pd.Timestamp(latest_date) + datetime.timedelta(days=1)
@@ -121,7 +134,6 @@ def clean_tweets(dates):
         df['lang'] = L
         df_filtered = df.loc[df.loc[:, 'lang'] == Language.ENGLISH].copy(deep=True)
         df_filtered.drop(['lang'], axis=1, inplace=True)
-        df_filtered.to_csv(f'{FOLDER_PATH}/{filename}.csv')
 
     print('Tweets cleaned')
     return scraped_dfs
@@ -133,6 +145,7 @@ def update_tweets():
 
     print('\nRunning tweet scraper...', end='\n')
     today, latest_date, dates = get_dates()
+    print(dates)
     scraped_dfs = clean_tweets(dates)
     sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
     condensed_tweets = condense_tweets(sentiment_analyzed_dfs)

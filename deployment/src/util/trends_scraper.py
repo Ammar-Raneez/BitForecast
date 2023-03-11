@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from utils.mongodb import init_mongodb
+from util.mongodb import init_mongodb, TRENDS_COLLECTION
 
 URL = 'https://bitinfocharts.com/comparison/google_trends-btc.html#alltime'
 
@@ -42,7 +42,10 @@ def process_scripts():
         if (data.index(each) % 2) == 0:
             dates.append(each)
         else:
-            trends.append(each)
+            try:
+                trends.append(float(each))
+            except:
+                trends.append(None)
 
     return dates, trends
 
@@ -64,8 +67,9 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Google Trends'].delete_many({})
-    dataset_db['Google Trends'].insert_one(df_dict)
+    dataset_db[TRENDS_COLLECTION].delete_many({})
+    dataset_db[TRENDS_COLLECTION].insert_one(df_dict)
+    print('Saved data to MongoDB')
 
 def update_trends():
     '''

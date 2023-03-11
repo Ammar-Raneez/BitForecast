@@ -19,7 +19,7 @@ def get_requirements(file_path):
   return requirements
 
 setup(
-  name='BitForecast-server',
+  name='BitForecast-deployment',
   version='1.0.0',
   author='Ammar',
   author_email='ammarraneez@gmail.com',

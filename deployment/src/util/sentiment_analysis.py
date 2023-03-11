@@ -2,8 +2,6 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from tqdm import tqdm
 
-FOLDER_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/tweets_complete_sentiment_unweighed'
-
 def preprocess(text):
     '''
     Required preprocessing for VADER
@@ -66,16 +64,8 @@ def analyze_sentiment(dfs):
         df['neutral_score'] = neutral_scores
         df['compound_score'] = compound_scores
         sentiment_analyzed_dfs.append(df)
-        export_data(df, df_filename)
 
     return sentiment_analyzed_dfs
-
-def export_data(df, filename):
-    '''
-    Save data
-    '''
-
-    df.to_csv(f'{FOLDER_PATH}/{filename}.csv')
 
 def analyze_sentiments(dfs):
     '''

@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 from datetime import datetime
 
-from utils.mongodb import init_mongodb
+from util.mongodb import init_mongodb, BTC_PRICES_COLLECTION
 
 # API reference: http://api.scraperlink.com/investpy/
 BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC&key=474f2c8d88ee117dc1408e97d03c6a24a745db9c'
@@ -39,6 +39,7 @@ def clean_data(prices):
     df.drop(['rowDate', 'rowDateTimestamp'], axis=1, inplace=True)
     df.sort_values(['date'], inplace=True)
     df['date'] = df['date'].astype(str)
+    df['close'] = df['close'].astype(float)
     # df.set_index('date', inplace=True)
     return df
 
@@ -51,8 +52,9 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Bitcoin Prices'].delete_many({})
-    dataset_db['Bitcoin Prices'].insert_one(df_dict)
+    dataset_db[BTC_PRICES_COLLECTION].delete_many({})
+    dataset_db[BTC_PRICES_COLLECTION].insert_one(df_dict)
+    print('Saved data to MongoDB')
 
 def update_prices():
     '''

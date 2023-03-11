@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
+from util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
 
 def dt(x):
     '''
@@ -11,12 +11,15 @@ def dt(x):
     t = pd.Timestamp(x)
     return pd.Timestamp.date(t)
 
-def read_csv():
+def read_mongo_df():
     '''
-    Load all existing condensed csv
+    Load all existing condensed df
     '''
 
-    df = pd.read_csv(f'{OUTPUT_PATH}', engine='python')
+    db = init_mongodb()
+    sentiments = db[TWITTER_SENTIMENTS_COLLECTION].find_one()
+    del sentiments['_id']
+    df = pd.DataFrame.from_dict(sentiments, orient='index')
     return df
 
 def condense(dfs):
@@ -25,7 +28,7 @@ def condense(dfs):
     '''
 
     condensed_df = None
-    existing_df = read_csv()
+    existing_df = read_mongo_df()
 
     for i, df in tqdm(enumerate(dfs)):
         # Certain files have timestamp column, certain have date
@@ -68,7 +71,13 @@ def export_data(df):
     Save data
     '''
 
-    df.to_csv(OUTPUT_PATH)
+    # Store datasets in mongodb for any requirements in production
+    df.index = df.index.astype(str)
+    df_dict = df.to_dict('index')
+    dataset_db = init_mongodb()
+    dataset_db[TWITTER_SENTIMENTS_COLLECTION].delete_many({})
+    dataset_db[TWITTER_SENTIMENTS_COLLECTION].insert_one(df_dict)
+    print('Saved data to MongoDB')
 
 def condense_tweets(dfs):
     '''

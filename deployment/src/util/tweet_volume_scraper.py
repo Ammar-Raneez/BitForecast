@@ -1,11 +1,11 @@
-import requests
+import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from utils.mongodb import init_mongodb
+from util.mongodb import init_mongodb, TWITTER_VOLUME_COLLECTION
 
-URL = 'https://bitinfocharts.com/comparison/fee_to_reward-btc.html#alltime'
+URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
 
 response = requests.get(URL)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -24,11 +24,11 @@ def parse(string_list):
 
 def process_scripts():
     '''
-    Scrape URL script tag and extract block reward & respective date
+    Scrape URL script tag and extract tweet volume & respective date
     '''
 
     dates = []
-    sizes = []
+    tweets = []
 
     for script in scripts:
         if 'd = new Dygraph(document.getElementById("container")' in script.text:
@@ -42,17 +42,20 @@ def process_scripts():
         if (data.index(each) % 2) == 0:
             dates.append(each)
         else:
-            sizes.append(each)
+            try:
+                tweets.append(float(each))
+            except:
+                tweets.append(None)
 
-    return dates, sizes
+    return dates, tweets
 
 def create_dataframe():
     '''
-    Create dataframe from scraped block reward sizes and dates
+    Create dataframe from scraped twitter volume and dates
     '''
 
-    dates, sizes = process_scripts()
-    df = pd.DataFrame(list(zip(dates, sizes)), columns=['Date', 'Block Reward Size'])
+    dates, tweets = process_scripts()
+    df = pd.DataFrame(list(zip(dates, tweets)), columns=['Date', 'Tweet Volume'])
     return df
 
 def export_data(df):
@@ -64,18 +67,19 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Block Reward'].delete_many({})
-    dataset_db['Block Reward'].insert_one(df_dict)
+    dataset_db[TWITTER_VOLUME_COLLECTION].delete_many({})
+    dataset_db[TWITTER_VOLUME_COLLECTION].insert_one(df_dict)
+    print('Saved data to MongoDB')
 
-def update_block_reward():
+def update_tweet_volume():
     '''
     Main runner
     '''
 
-    print('\nRunning block reward scraper...', end='\n')
+    print('\nRunning twitter volume scraper...', end='\n')
     df = create_dataframe()
     export_data(df)
-    print('\nBlock reward data updated', end='\n')
+    print('\nTwitter volume updated', end='\n')
 
     # Return for script
     return df

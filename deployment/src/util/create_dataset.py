@@ -1,6 +1,6 @@
 import pandas as pd
 
-from utils.mongodb import init_mongodb
+from util.mongodb import init_mongodb, FINAL_DATASET_COLLECTION
 
 def get_prices(historical_prices):
     '''
@@ -87,13 +87,13 @@ def get_exogenous_datasets(
     filtered_block_reward = get_block_reward(block_reward)
     filtered_gtrends = get_google_trends(trends)
     filtered_twitter_volume = get_twitter_volume(tweet_volume)
-    # filtered_twitter_sentiments = get_twitter_sentiment(tweets)
+    filtered_twitter_sentiments = get_twitter_sentiment(tweets)
 
     exogenous_features = [
         filtered_block_reward,
         filtered_gtrends,
         filtered_twitter_volume,
-        # filtered_twitter_sentiments
+        filtered_twitter_sentiments
     ]
 
     for i in exogenous_features:
@@ -149,8 +149,9 @@ def export_data(df):
     df.index = df.index.astype(str)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
-    dataset_db['Final Dataset'].delete_many({})
-    dataset_db['Final Dataset'].insert_one(df_dict)
+    dataset_db[FINAL_DATASET_COLLECTION].delete_many({})
+    dataset_db[FINAL_DATASET_COLLECTION].insert_one(df_dict)
+    print('Saved data to MongoDB')
 
 def create_final_dataset(
     prices,
