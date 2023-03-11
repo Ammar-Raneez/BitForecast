@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 # API reference: http://api.scraperlink.com/investpy/
-BASE_URL = 'http://api.scraperlink.com/investpy/?email=your@email.com&type=historical_data&product=cryptos&symbol=BTC'
+BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC&key=474f2c8d88ee117dc1408e97d03c6a24a745db9c'
 FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
 
 def get_crypto_data(start, end):
@@ -37,7 +37,8 @@ def clean_data(prices):
     df['date'] = pd.to_datetime(df['rowDate'])
     df.drop(['rowDate', 'rowDateTimestamp'], axis=1, inplace=True)
     df.sort_values(['date'], inplace=True)
-    df.set_index('date', inplace=True)
+    df['date'] = df['date'].astype(str)
+    # df.set_index('date', inplace=True)
     return df
 
 def export_data(df):

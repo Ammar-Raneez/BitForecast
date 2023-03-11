@@ -6,8 +6,6 @@ the available data being used and in turn create the updated final dataset
 import sys
 sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
 
-import time
-
 from utils.price_scraper import update_prices
 from utils.block_reward_scraper import update_block_reward
 from utils.trends_scraper import update_trends
