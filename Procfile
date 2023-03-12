@@ -1,1 +1,0 @@
-web: gunicorn --pythonpath deployment app:app
