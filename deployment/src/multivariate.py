@@ -9,11 +9,12 @@ import tensorflow as tf
 
 from common import *
 from util.mongodb import init_mongodb, FINAL_DATASET_COLLECTION
+from util.aws import save_to_s3
 
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/deployment/src/models/ensemble_multivariate_complete'
+ENSEMBLE_PATH = 'models/ensemble_multivariate_complete'
 
 def create_dataset():
   '''
@@ -63,7 +64,7 @@ def create_multivariate_ensemble():
 
   data = create_dataset()
   ensemble = create_ensemble(data['data'])
-  save_ensemble(ensemble, ENSEMBLE_PATH)
+  save_to_s3(ensemble, 'multivariate_ensemble')
   return ensemble
 
 def make_future_forecasts(

@@ -33,7 +33,8 @@ def get_upper_lower_bounds(preds):
 
 def save_ensemble(ensemble, path):
   '''
-  Save ensemble
+  Save ensemble locally
+  Not used in deployment
   '''
 
   for i, model in enumerate(ensemble):
@@ -41,7 +42,8 @@ def save_ensemble(ensemble, path):
 
 def load_ensemble(path):
   '''
-  Load ensemble
+  Load ensemble from local
+  Not used in deployment
   '''
 
   ensemble = [tf.keras.models.load_model(f'{path}/{model}') for model in os.listdir(path)]
