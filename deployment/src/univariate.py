@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 import tensorflow as tf
+import os
 
 from common import *
 from util.mongodb import init_mongodb, BTC_PRICES_COLLECTION
@@ -14,7 +15,8 @@ from util.aws import save_to_s3
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
-ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_univariate_complete'
+ENSEMBLE_PATH = os.path.join(os.getcwd(), 'src', 'models', 'ensemble_univariate_complete')
+ENSEMBLE_PATH = ENSEMBLE_PATH.replace('\\', '/')
 
 def create_dataset():
   '''
@@ -58,6 +60,7 @@ def create_univariate_ensemble():
   _, _, dataset_all = create_dataset()
   ensemble = create_ensemble(dataset_all)
   save_to_s3(ensemble, 'univariate_ensemble')
+  save_ensemble(ensemble, ENSEMBLE_PATH)
   return ensemble
 
 def make_future_forecasts(

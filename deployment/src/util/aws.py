@@ -27,6 +27,49 @@ def save_to_s3(ensemble, location):
 
         # Required for Windows
         s3_path = s3_path.replace('\\', '/')
-        s3_client.upload_file(local_path, 'bitforecast-resources', s3_path)
+        s3_client.upload_file(local_path, os.getenv('AWS_BUCKET_NAME'), s3_path)
 
     print('Model saved to S3\n')
+
+def read_model_from_bucket(location):
+  '''
+  NOTE
+  This is going to make things extremely slow if we
+  are to do this every time an inference is required.
+  '''
+
+  local_dir = 'src/models'
+  if not os.path.exists(local_dir):
+    os.makedirs(local_dir)
+
+  response = s3_client.list_objects_v2(
+    Bucket=os.getenv('AWS_BUCKET_NAME'),
+    Prefix=location,
+    Delimiter='/'
+  )
+
+  # This script is responsible for downloading the model into storage
+  # Such a script is necessary as the savedModel format has nested folders
+  for obj in response.get('Contents', []):
+    s3_path = obj['Key']
+    local_path = os.path.join(local_dir, os.path.relpath(s3_path, location))
+    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+    s3_client.download_file(os.getenv('AWS_BUCKET_NAME'), s3_path, local_path)
+  for prefix in response.get('CommonPrefixes', []):
+    subfolder = prefix['Prefix']
+    local_subdir = os.path.join(local_dir, os.path.relpath(subfolder, location))
+    os.makedirs(local_subdir, exist_ok=True)
+    response = s3_client.list_objects_v2(Bucket=os.getenv('AWS_BUCKET_NAME'), Prefix=subfolder, Delimiter='/')
+    for obj in response.get('Contents', []):
+        s3_path = obj['Key']
+        local_path = os.path.join(local_dir, os.path.relpath(s3_path, location))
+        s3_client.download_file(os.getenv('AWS_BUCKET_NAME'), s3_path, local_path)
+    for subprefix in response.get('CommonPrefixes', []):
+        subsubfolder = subprefix['Prefix']
+        local_subsubdir = os.path.join(local_dir, os.path.relpath(subsubfolder, location))
+        os.makedirs(local_subsubdir, exist_ok=True)
+        response = s3_client.list_objects_v2(Bucket=os.getenv('AWS_BUCKET_NAME'), Prefix=subsubfolder, Delimiter='/')
+        for obj in response.get('Contents', []):
+            s3_path = obj['Key']
+            local_path = os.path.join(local_dir, os.path.relpath(s3_path, location))
+            s3_client.download_file(os.getenv('AWS_BUCKET_NAME'), s3_path, local_path)

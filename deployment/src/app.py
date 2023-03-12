@@ -7,7 +7,7 @@ from common import load_ensemble
 from univariate import univariate_forecast, create_univariate_ensemble
 from multivariate import multivariate_forecast, create_multivariate_ensemble
 
-from util.aws import s3_client, save_to_s3
+from util.aws import s3_client, save_to_s3, read_model_from_bucket
 from util.mongodb import init_mongodb
 
 app = Flask(__name__)
@@ -127,7 +127,7 @@ def hello():
     'status': 200
   }, 200
 
-@app.route('/api/test/save-s3')
+@app.route('/api/test/save-model-s3')
 def save_s3():
   ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
   ensemble = load_ensemble(ENSEMBLE_PATH)
@@ -135,6 +135,15 @@ def save_s3():
 
   return {
     'output': 'BitForecast model saved succesfully',
+    'status': 200
+  }, 200
+
+@app.route('/api/test/read-model-s3')
+def read_s3():
+  print(read_model_from_bucket('multivariate_ensemble/'))
+
+  return {
+    'output': 'BitForecast model read succesfully',
     'status': 200
   }, 200
 
