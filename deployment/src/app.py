@@ -6,10 +6,14 @@ from update_data import update_data
 from univariate import univariate_forecast, create_univariate_ensemble
 from multivariate import multivariate_forecast, create_multivariate_ensemble
 
+from common import load_ensemble
+from util.aws import save_to_s3
+
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 API = Api(app)
+
 
 @app.route('/ping')
 def hello():
@@ -18,6 +22,8 @@ def hello():
     'status': 200
   }, 200
 
+
+### Main Routes ###
 @app.route('/api/v1/models/univariate', methods=['POST'])
 def univariate():
   inputs = request.get_json()
@@ -118,6 +124,19 @@ def update_datasets():
   except Exception as e:
     print(e)
     abort(make_response(jsonify(message='Something went wrong while updating the datasets'), 500))
+
+
+### Testing Routes ###
+@app.route('/test/save-s3')
+def save_s3():
+  ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
+  ensemble = load_ensemble(ENSEMBLE_PATH)
+  save_to_s3(ensemble, 'multivariate_ensemble')
+
+  return {
+    'output': 'BitForecast model saved succesfully',
+    'status': 200
+  }, 200
 
 if __name__ == '__main__':
   app.run()

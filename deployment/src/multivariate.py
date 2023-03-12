@@ -14,7 +14,7 @@ from util.aws import save_to_s3
 HORIZON = 1
 WINDOW_SIZE = 7
 BATCH_SIZE = 1024
-ENSEMBLE_PATH = 'models/ensemble_multivariate_complete'
+ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
 
 def create_dataset():
   '''
