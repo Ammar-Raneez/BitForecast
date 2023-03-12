@@ -2,13 +2,13 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask import abort, Flask, jsonify, make_response, request
 
-from update_data import update_data
-from common import load_ensemble
-from univariate import univariate_forecast, create_univariate_ensemble
-from multivariate import multivariate_forecast, create_multivariate_ensemble
+from src.update_data import update_data
+from src.common import load_ensemble
+from src.univariate import univariate_forecast, create_univariate_ensemble
+from src.multivariate import multivariate_forecast, create_multivariate_ensemble
 
-from util.aws import s3_client, save_to_s3, read_model_from_bucket
-from util.mongodb import init_mongodb
+from src.util.aws import s3_client, save_to_s3, read_model_from_bucket
+from src.util.mongodb import init_mongodb
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
