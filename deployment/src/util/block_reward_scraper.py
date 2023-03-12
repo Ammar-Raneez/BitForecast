@@ -65,6 +65,7 @@ def export_data(df):
 
     # Store datasets in mongodb for any requirements in production
     df.index = df.index.astype(str)
+    df.sort_values(['Date'], inplace=True)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
     dataset_db[BLOCK_REWARD_COLLECTION].delete_many({})

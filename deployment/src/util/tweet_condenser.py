@@ -61,6 +61,7 @@ def condense(dfs):
     # Remove duplicate dates
     condensed_combined_df = condensed_combined_df[~condensed_combined_df.date.duplicated(keep='first')]
     condensed_combined_df['date'] = condensed_combined_df['date'].astype(str)
+    condensed_combined_df.reset_index(inplace=True, drop=True) 
 
     # Filter only required columns
     condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]
@@ -73,6 +74,7 @@ def export_data(df):
 
     # Store datasets in mongodb for any requirements in production
     df.index = df.index.astype(str)
+    df.sort_values(['date'], inplace=True)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
     dataset_db[TWITTER_SENTIMENTS_COLLECTION].delete_many({})

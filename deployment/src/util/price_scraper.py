@@ -50,6 +50,7 @@ def export_data(df):
 
     # Store datasets in mongodb for any requirements in production
     df.index = df.index.astype(str)
+    df.sort_values(['date'], inplace=True)
     df_dict = df.to_dict('index')
     dataset_db = init_mongodb()
     dataset_db[BTC_PRICES_COLLECTION].delete_many({})
