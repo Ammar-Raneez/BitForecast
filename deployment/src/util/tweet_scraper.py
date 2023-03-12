@@ -5,9 +5,9 @@ from lingua import Language, LanguageDetectorBuilder
 import datetime
 from tqdm import tqdm
 
-from util.sentiment_analysis import analyze_sentiments
-from util.tweet_condenser import condense_tweets
-from util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
+from src.util.sentiment_analysis import analyze_sentiments
+from src.util.tweet_condenser import condense_tweets
+from src.util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
 
 detector = LanguageDetectorBuilder.from_languages(Language.ENGLISH, Language.GERMAN).build()
 

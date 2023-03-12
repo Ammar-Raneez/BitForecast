@@ -3,12 +3,12 @@ This script will utilize the scrapers and the available scripts to update all
 the available data being used and in turn create the updated final dataset 
 '''
 
-from util.price_scraper import update_prices
-from util.block_reward_scraper import update_block_reward
-from util.trends_scraper import update_trends
-from util.tweet_volume_scraper import update_tweet_volume
-from util.tweet_scraper import update_tweets
-from util.create_dataset import create_final_dataset
+from src.util.price_scraper import update_prices
+from src.util.block_reward_scraper import update_block_reward
+from src.util.trends_scraper import update_trends
+from src.util.tweet_volume_scraper import update_tweet_volume
+from src.util.tweet_scraper import update_tweets
+from src.util.create_dataset import create_final_dataset
 
 def update_data():
   '''

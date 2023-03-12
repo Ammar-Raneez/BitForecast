@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from util.mongodb import init_mongodb, TRENDS_COLLECTION
+from src.util.mongodb import init_mongodb, TRENDS_COLLECTION
 
 URL = 'https://bitinfocharts.com/comparison/google_trends-btc.html#alltime'
 

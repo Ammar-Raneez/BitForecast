@@ -1,6 +1,6 @@
 import pandas as pd
 
-from util.mongodb import init_mongodb, FINAL_DATASET_COLLECTION
+from src.util.mongodb import init_mongodb, FINAL_DATASET_COLLECTION
 
 def get_prices(historical_prices):
     '''

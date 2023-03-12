@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-from util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
+from src.util.mongodb import init_mongodb, TWITTER_SENTIMENTS_COLLECTION
 
 def dt(x):
     '''

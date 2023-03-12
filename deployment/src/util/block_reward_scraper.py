@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from util.mongodb import init_mongodb, BLOCK_REWARD_COLLECTION
+from src.util.mongodb import init_mongodb, BLOCK_REWARD_COLLECTION
 
 URL = 'https://bitinfocharts.com/comparison/fee_to_reward-btc.html#alltime'
 

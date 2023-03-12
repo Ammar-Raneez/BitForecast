@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import re
 
-from util.mongodb import init_mongodb, TWITTER_VOLUME_COLLECTION
+from src.util.mongodb import init_mongodb, TWITTER_VOLUME_COLLECTION
 
 URL = 'https://bitinfocharts.com/comparison/bitcoin-tweets.html#alltime'
 
