@@ -3,24 +3,17 @@ from flask_restful import Api
 from flask import abort, Flask, jsonify, make_response, request
 
 from update_data import update_data
+from common import load_ensemble
 from univariate import univariate_forecast, create_univariate_ensemble
 from multivariate import multivariate_forecast, create_multivariate_ensemble
 
-from common import load_ensemble
-from util.aws import save_to_s3
+from util.aws import s3_client, save_to_s3
+from util.mongodb import init_mongodb
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 API = Api(app)
-
-
-@app.route('/ping')
-def hello():
-  return {
-    'output': 'BitForecast server is healthy',
-    'status': 200
-  }, 200
 
 
 ### Main Routes ###
@@ -127,11 +120,28 @@ def update_datasets():
 
 
 ### Testing Routes ###
-@app.route('/test/save-s3')
+@app.route('/api/test/ping')
+def hello():
+  return {
+    'output': 'BitForecast server is healthy',
+    'status': 200
+  }, 200
+
+@app.route('/api/test/save-s3')
 def save_s3():
   ENSEMBLE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/server/models/ensemble_multivariate_complete'
   ensemble = load_ensemble(ENSEMBLE_PATH)
   save_to_s3(ensemble, 'multivariate_ensemble')
+
+  return {
+    'output': 'BitForecast model saved succesfully',
+    'status': 200
+  }, 200
+
+@app.route('/api/test/environment-variables')
+def check_env_variables():
+  print(init_mongodb())
+  print(s3_client.list_buckets())
 
   return {
     'output': 'BitForecast model saved succesfully',

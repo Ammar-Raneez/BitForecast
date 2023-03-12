@@ -1,6 +1,10 @@
 import pymongo
 
-MONGO_URI = 'mongodb+srv://Ammar:DhF6EUunp15ME6TK@bitforecast.ifghzuj.mongodb.net/test?authSource=admin&replicaSet=atlas-4w9tbc-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+MONGO_URI = os.getenv('MONGODB_URI')
 DB_NAME = 'datasets'
 BTC_PRICES_COLLECTION = 'Bitcoin Prices'
 BLOCK_REWARD_COLLECTION = 'Block Reward'

@@ -1,11 +1,14 @@
 import boto3
 import tempfile
+
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 s3_client = boto3.client(
   's3',
-  aws_access_key_id='AKIAYIIZ5ONJ2QHFZX5P',
-  aws_secret_access_key='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'
+  aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+  aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 
 def save_to_s3(ensemble, location):
