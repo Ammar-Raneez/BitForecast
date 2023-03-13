@@ -108,12 +108,12 @@ def clean_tweets(dates):
     Clean tweets that have empty records and non-english tweets
     '''
 
-    print('Scraping tweets...')
+    print('Scraping tweets...\n')
     tweets_list = scrape_tweets(dates)
-    print('Tweets scraped')
+    print('Tweets scraped\n')
     scraped_dfs = process_tweets(tweets_list)
 
-    print('Cleaning tweets...')
+    print('Cleaning tweets...\n')
     for i, df in enumerate(tqdm(scraped_dfs)):
         if df.iloc[0].get('timestamp'):
             filename = str(df.iloc[0]['timestamp'])
@@ -135,7 +135,7 @@ def clean_tweets(dates):
         df_filtered = df.loc[df.loc[:, 'lang'] == Language.ENGLISH].copy(deep=True)
         df_filtered.drop(['lang'], axis=1, inplace=True)
 
-    print('Tweets cleaned')
+    print('Tweets cleaned\n')
     return scraped_dfs
 
 def update_tweets():
@@ -143,13 +143,14 @@ def update_tweets():
     Main runner
     '''
 
-    print('\nRunning tweet scraper...', end='\n')
+    print('Running tweet scraper...\n')
     today, latest_date, dates = get_dates()
     print(dates)
+    print()
     scraped_dfs = clean_tweets(dates)
     sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
     condensed_tweets = condense_tweets(sentiment_analyzed_dfs)
-    print('\nTweet data and sentiments updated', end='\n')
+    print('Tweet data and sentiments updated\n')
 
     # Return for scripts
     return condensed_tweets

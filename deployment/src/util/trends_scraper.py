@@ -70,17 +70,17 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[TRENDS_COLLECTION].delete_many({})
     dataset_db[TRENDS_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def update_trends():
     '''
     Main runner
     '''
 
-    print('\nRunning Google Trends scraper...', end='\n')
+    print('Running Google Trends scraper...\n')
     df = create_dataframe()
     export_data(df)
-    print('\nGoogle Trends data updated', end='\n')
+    print('Google Trends data updated\n')
 
     # Return for script
     return df

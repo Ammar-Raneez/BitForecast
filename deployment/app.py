@@ -53,12 +53,6 @@ def multivariate():
 @app.route('/api/v1/models/univariate/update', methods=['POST'])
 def update_univariate_model():
   try:
-    update_data()
-  except Exception as e:
-    print(e)
-    abort(make_response(jsonify(message='Something went wrong while updating the datasets'), 500))
-
-  try:
     create_univariate_ensemble()
     return {
       'output': 'Univariate model updated',
@@ -70,12 +64,6 @@ def update_univariate_model():
 
 @app.route('/api/v1/models/multivariate/update', methods=['POST'])
 def update_multivariate_model():
-  try:
-    update_data()
-  except Exception as e:
-    print(e)
-    abort(make_response(jsonify(message='Something went wrong while updating the datasets'), 500))
-
   try:
     create_multivariate_ensemble()
     return {
@@ -89,14 +77,14 @@ def update_multivariate_model():
 @app.route('/api/v1/models/update', methods=['POST'])
 def update_models():
   try:
-    print('Updating univariate model...')
+    print('Updating univariate model...\n')
     create_univariate_ensemble()
   except Exception as e:
     print(e)
     abort(make_response(jsonify(message='Something went wrong while updating the univariate model'), 500))
 
   try:
-    print('Updating multivariate model...')
+    print('Updating multivariate model...\n')
     create_multivariate_ensemble()
     return {
       'output': 'Multivariate model updated',

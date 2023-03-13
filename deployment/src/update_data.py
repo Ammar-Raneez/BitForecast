@@ -15,7 +15,7 @@ def update_data():
   Update all the available data
   '''
 
-  print('\nRunning data update script...', end='\n')
+  print('Running data update script...\n')
   prices = update_prices()
   block_reward = update_block_reward()
   tweet_volume = update_tweet_volume()
@@ -24,5 +24,5 @@ def update_data():
 
   create_final_dataset(prices, block_reward, trends, tweet_volume, tweets)
 
-  print('\nData update script completed', end='\n')
-  print('Data successfully saved into MongoDB')
+  print('Data update script completed\n')
+  print('Data successfully saved into MongoDB\n')

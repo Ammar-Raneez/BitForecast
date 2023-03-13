@@ -70,17 +70,17 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[BLOCK_REWARD_COLLECTION].delete_many({})
     dataset_db[BLOCK_REWARD_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def update_block_reward():
     '''
     Main runner
     '''
 
-    print('\nRunning block reward scraper...', end='\n')
+    print('Running block reward scraper...\n')
     df = create_dataframe()
     export_data(df)
-    print('\nBlock reward data updated', end='\n')
+    print('Block reward data updated\n')
 
     # Return for script
     return df

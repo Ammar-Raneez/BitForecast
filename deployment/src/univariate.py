@@ -4,11 +4,12 @@ This file handles univariate forecasting
 
 import numpy as np
 import pandas as pd
-
 import tensorflow as tf
+
 import os
 
-from src.common import get_future_dates, get_upper_lower_bounds, save_ensemble, load_ensemble, create_ensemble
+from src.update_data import update_data
+from src.common import get_future_dates, check_data, get_upper_lower_bounds, save_ensemble, load_ensemble, create_ensemble
 from src.util.mongodb import init_mongodb, BTC_PRICES_COLLECTION
 from src.util.aws import save_to_s3
 
@@ -18,7 +19,7 @@ BATCH_SIZE = 1024
 ENSEMBLE_PATH = os.path.join(os.getcwd(), 'src', 'models', 'ensemble_univariate_complete')
 ENSEMBLE_PATH = ENSEMBLE_PATH.replace('\\', '/')
 
-def create_dataset():
+def create_univariate_dataset():
   '''
   Create the required dataset format (Windowing, Cleaning & Spitting)
   '''
@@ -28,7 +29,7 @@ def create_dataset():
   prices = db[BTC_PRICES_COLLECTION].find_one()
   del prices['_id']
   data = pd.DataFrame.from_dict(prices, orient='index')
-  print('Data successfully imported from MongoDB')
+  print('Data successfully imported from MongoDB\n')
 
   # Clean up data
   data.drop(['volume', 'open', 'max', 'min', 'change_percent'], axis=1, inplace=True)
@@ -50,15 +51,30 @@ def create_dataset():
   labels_dataset_all = tf.data.Dataset.from_tensor_slices(y_all)
   dataset_all = tf.data.Dataset.zip((features_dataset_all, labels_dataset_all))
   dataset_all = dataset_all.batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
-  return data, y_all, dataset_all
+  return {
+    'data': data,
+    'data_windowed': data_windowed,
+    'y_all': y_all,
+    'x_all': x_all,
+    'dataset_all': dataset_all,
+  }
 
 def create_univariate_ensemble():
   '''
   Create the univariate ensemble model (for the case of retraining)
   '''
 
-  _, _, dataset_all = create_dataset()
-  ensemble = create_ensemble(dataset_all)
+  data = create_univariate_dataset()
+
+  # Update data if not up to date
+  is_data_updated = check_data(data)
+  if not is_data_updated:
+    print('Data is not up to date, hence running update script first...\n')
+    update_data()
+  else:
+    print('Data is up to date, hence skipping update script\n')
+
+  ensemble = create_ensemble(data['dataset_all'])
   save_to_s3(ensemble, 'univariate_ensemble')
   save_ensemble(ensemble, ENSEMBLE_PATH)
   return ensemble
@@ -101,11 +117,11 @@ def univariate_forecast(into_future=5):
   Create the forecast
   '''
 
-  raw_data, y_all, _ = create_dataset()
+  data = create_univariate_dataset()
   ensemble = load_ensemble(ENSEMBLE_PATH)
 
   future_forecast = make_future_forecasts(
-    values=y_all,
+    values=data['y_all'],
     ensemble=ensemble,
     into_future=into_future,
     window_size=WINDOW_SIZE
@@ -115,7 +131,7 @@ def univariate_forecast(into_future=5):
   # last_price = raw_data['Price'][-1]
 
   next_time_steps = get_future_dates(
-    start_date=raw_data.index[-1], 
+    start_date=data['data'].index[-1], 
     into_future=into_future
   )
 

@@ -73,7 +73,7 @@ def analyze_sentiments(dfs):
     dfs -> comes from the tweet_scraper script (only the new fetched dates)
     '''
 
-    print('\nRunning sentiment analysis...', end='\n')
+    print('Running sentiment analysis...\n')
     sentiment_analyzed_dfs = analyze_sentiment(dfs)
-    print('\nTweet sentiment analysis performed', end='\n')
+    print('Tweet sentiment analysis performed\n')
     return sentiment_analyzed_dfs
