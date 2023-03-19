@@ -63,7 +63,8 @@ def condense(dfs):
     condensed_combined_df['date'] = condensed_combined_df['date'].astype(str)
     condensed_combined_df.reset_index(inplace=True, drop=True) 
 
-    # Filter only required columns
+    # Filter only required columns. At this moment the sentiments are weighed
+    # hence, the other columns are no longer needed.
     condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]
     return condensed_combined_df_required
 
