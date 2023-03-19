@@ -1,7 +1,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
+OUTPUT_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment.csv'
 
 def dt(x):
     '''
@@ -59,7 +59,8 @@ def condense(dfs):
     condensed_combined_df = condensed_combined_df[~condensed_combined_df.date.duplicated(keep='first')]
     condensed_combined_df['date'] = condensed_combined_df['date'].astype(str)
 
-    # Filter only required columns
+    # Filter only required columns. At this moment the sentiments are weighed
+    # hence, the other columns are no longer needed.
     condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]
     return condensed_combined_df_required
 

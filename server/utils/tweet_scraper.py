@@ -61,7 +61,7 @@ def scrape_tweets(dates):
                     break
                 if not tweets_list.get(date):
                     tweets_list[date] = []
-                tweets_list[date].append([tweet.date, tweet.user.username, tweet.rawContent])
+                tweets_list[date].append([tweet.date, tweet.user, tweet.retweetCount, tweet.likeCount, tweet.rawContent])
         except Exception as e:
             print(f'Error: {e}')
 
@@ -74,17 +74,29 @@ def process_tweets(tweets_list):
 
     dates = []
     usernames = []
+    user_total_followers = []
+    user_total_listed = []
+    tweet_retweets = []
+    tweet_likes = []
     texts = []
 
     for i, val in enumerate(tweets_list.values()):
         for j in val:
             dates.append(j[0])
-            usernames.append(j[1])
-            texts.append(j[2])
+            usernames.append(j[1].username)
+            user_total_followers.append(j[1].followersCount)
+            user_total_listed.append(j[1].listedCount)
+            tweet_retweets.append(j[2])
+            tweet_likes.append(j[3])
+            texts.append(j[-1])
 
     df_details = {
         'user': usernames,
         'timestamp': dates,
+        'user_total_followers': user_total_followers,
+        'user_total_listed': user_total_listed,
+        'tweet_retweets': tweet_retweets,
+        'tweet_likes': tweet_likes,
         'text': texts
     }
 
@@ -111,7 +123,7 @@ def clean_tweets(dates):
             filename = str(df.iloc[0]['date'])
 
         print(f'Currently at df: {i+1} | {filename}')
-        df.dropna(subset=['user', 'timestamp', 'text'], inplace=True)
+        df.dropna(subset=['user', 'timestamp', 'text', 'user_total_followers', 'user_total_listed', 'tweet_retweets', 'tweet_likes'], inplace=True)
 
         L = []
         for row in df['text']:
