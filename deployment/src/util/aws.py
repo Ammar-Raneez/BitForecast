@@ -12,6 +12,7 @@ s3_client = boto3.client(
 )
 
 def save_to_s3(ensemble, location):
+  print('Running save ensemble to S3...\n')
   with tempfile.TemporaryDirectory() as temp_dir:
     print('Saving model to temporary directory...\n')
     for i, model in enumerate(ensemble):

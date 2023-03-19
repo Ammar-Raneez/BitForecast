@@ -1,7 +1,7 @@
 import pandas as pd
 
 TRENDS_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_GTrends.csv'
-TWEETS_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment_Unweighed.csv'
+TWEETS_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Sentiment.csv'
 TWEET_VOLUME_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/Tweets/BTC_Tweet_Volume.csv'
 BLOCK_REWARD_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Block_Reward.csv'
 BTC_PRICES_DATA = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'

@@ -63,7 +63,8 @@ def condense(dfs):
     condensed_combined_df['date'] = condensed_combined_df['date'].astype(str)
     condensed_combined_df.reset_index(inplace=True, drop=True) 
 
-    # Filter only required columns
+    # Filter only required columns. At this moment the sentiments are weighed
+    # hence, the other columns are no longer needed.
     condensed_combined_df_required = condensed_combined_df[['date', 'negative_score', 'neutral_score', 'positive_score', 'compound_score']]
     return condensed_combined_df_required
 
@@ -79,7 +80,7 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[TWITTER_SENTIMENTS_COLLECTION].delete_many({})
     dataset_db[TWITTER_SENTIMENTS_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def condense_tweets(dfs):
     '''
@@ -87,9 +88,9 @@ def condense_tweets(dfs):
     dfs -> comes from the sentiment_analysis script (only the new fetched dates)
     '''
 
-    print('\nRunning tweet condensation...', end='\n')
+    print('Running tweet condensation...\n')
     condensed_df = condense(dfs)
     export_data(condensed_df)
-    print('\nTweet condensation performed', end='\n')
+    print('Tweet condensation performed\n')
 
     return condensed_df

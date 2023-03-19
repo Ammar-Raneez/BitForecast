@@ -71,7 +71,7 @@ def scrape_tweets(dates):
                     break
                 if not tweets_list.get(date):
                     tweets_list[date] = []
-                tweets_list[date].append([tweet.date, tweet.user.username, tweet.rawContent])
+                tweets_list[date].append([tweet.date, tweet.user, tweet.retweetCount, tweet.likeCount, tweet.rawContent])
         except Exception as e:
             print(f'Error: {e}')
 
@@ -84,17 +84,29 @@ def process_tweets(tweets_list):
 
     dates = []
     usernames = []
+    user_total_followers = []
+    user_total_listed = []
+    tweet_retweets = []
+    tweet_likes = []
     texts = []
 
     for i, val in enumerate(tweets_list.values()):
         for j in val:
             dates.append(j[0])
-            usernames.append(j[1])
-            texts.append(j[2])
+            usernames.append(j[1].username)
+            user_total_followers.append(j[1].followersCount)
+            user_total_listed.append(j[1].listedCount)
+            tweet_retweets.append(j[2])
+            tweet_likes.append(j[3])
+            texts.append(j[-1])
 
     df_details = {
         'user': usernames,
         'timestamp': dates,
+        'user_total_followers': user_total_followers,
+        'user_total_listed': user_total_listed,
+        'tweet_retweets': tweet_retweets,
+        'tweet_likes': tweet_likes,
         'text': texts
     }
 
@@ -108,12 +120,12 @@ def clean_tweets(dates):
     Clean tweets that have empty records and non-english tweets
     '''
 
-    print('Scraping tweets...')
+    print('Scraping tweets...\n')
     tweets_list = scrape_tweets(dates)
-    print('Tweets scraped')
+    print('Tweets scraped\n')
     scraped_dfs = process_tweets(tweets_list)
 
-    print('Cleaning tweets...')
+    print('Cleaning tweets...\n')
     for i, df in enumerate(tqdm(scraped_dfs)):
         if df.iloc[0].get('timestamp'):
             filename = str(df.iloc[0]['timestamp'])
@@ -121,8 +133,7 @@ def clean_tweets(dates):
             filename = str(df.iloc[0]['date'])
 
         print(f'Currently at df: {i+1} | {filename}')
-        df.dropna(subset=['user', 'timestamp', 'text'], inplace=True)
-
+        df.dropna(subset=['user', 'timestamp', 'text', 'user_total_followers', 'user_total_listed', 'tweet_retweets', 'tweet_likes'], inplace=True)
         L = []
         for row in df['text']:
             # Use lingua to remove any non-english observations
@@ -135,7 +146,7 @@ def clean_tweets(dates):
         df_filtered = df.loc[df.loc[:, 'lang'] == Language.ENGLISH].copy(deep=True)
         df_filtered.drop(['lang'], axis=1, inplace=True)
 
-    print('Tweets cleaned')
+    print('Tweets cleaned\n')
     return scraped_dfs
 
 def update_tweets():
@@ -143,13 +154,14 @@ def update_tweets():
     Main runner
     '''
 
-    print('\nRunning tweet scraper...', end='\n')
+    print('Running tweet scraper...\n')
     today, latest_date, dates = get_dates()
     print(dates)
+    print()
     scraped_dfs = clean_tweets(dates)
     sentiment_analyzed_dfs = analyze_sentiments(scraped_dfs)
     condensed_tweets = condense_tweets(sentiment_analyzed_dfs)
-    print('\nTweet data and sentiments updated', end='\n')
+    print('Tweet data and sentiments updated\n')
 
     # Return for scripts
     return condensed_tweets

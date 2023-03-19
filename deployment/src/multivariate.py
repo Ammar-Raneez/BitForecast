@@ -4,11 +4,12 @@ This file handles multivariate forecasting
 
 import numpy as np
 import pandas as pd
-
 import tensorflow as tf
+
 import os
 
-from src.common import get_future_dates, get_upper_lower_bounds, save_ensemble, load_ensemble, create_ensemble
+from src.update_data import update_data
+from src.common import get_future_dates, check_data, get_upper_lower_bounds, save_ensemble, load_ensemble, create_ensemble
 from src.util.mongodb import init_mongodb, FINAL_DATASET_COLLECTION
 from src.util.aws import save_to_s3
 
@@ -18,7 +19,7 @@ BATCH_SIZE = 1024
 ENSEMBLE_PATH = os.path.join(os.getcwd(), 'src', 'models', 'ensemble_multivariate_complete')
 ENSEMBLE_PATH = ENSEMBLE_PATH.replace('\\', '/')
 
-def create_dataset():
+def create_multivariate_dataset():
   '''
   Create the required dataset format (Windowing, Cleaning & Spitting)
   '''
@@ -28,7 +29,7 @@ def create_dataset():
   prices = db[FINAL_DATASET_COLLECTION].find_one()
   del prices['_id']
   data = pd.DataFrame.from_dict(prices, orient='index')
-  print('Data successfully imported from MongoDB')
+  print('Data successfully imported from MongoDB\n')
 
   # Clean up data
   data = data[['date', 'volume', 'close', 'change_percent', 'Block Reward Size', 'bitcoin_unscaled', 'Tweet Volume', 'compound_score']]
@@ -64,8 +65,16 @@ def create_multivariate_ensemble():
   Create the multivariate ensemble model (for the case of retraining)
   '''
 
-  data = create_dataset()
-  ensemble = create_ensemble(data['data'])
+  data = create_multivariate_dataset()
+  # Update data if not up to date
+  is_data_updated = check_data(data)
+  if not is_data_updated:
+    print('Data is not up to date, hence running update script first...\n')
+    update_data()
+  else:
+    print('Data is up to date, hence skipping update script\n')
+
+  ensemble = create_ensemble(data['dataset_all'])
   save_to_s3(ensemble, 'multivariate_ensemble')
   save_ensemble(ensemble, ENSEMBLE_PATH)
   return ensemble
@@ -97,7 +106,7 @@ def multivariate_forecast():
   Create the forecast
   '''
 
-  data = create_dataset()
+  data = create_multivariate_dataset()
   ensemble = load_ensemble(ENSEMBLE_PATH)
 
   future_forecast = make_future_forecasts(

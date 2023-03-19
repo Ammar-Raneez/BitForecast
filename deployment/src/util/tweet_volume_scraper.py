@@ -70,17 +70,17 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[TWITTER_VOLUME_COLLECTION].delete_many({})
     dataset_db[TWITTER_VOLUME_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def update_tweet_volume():
     '''
     Main runner
     '''
 
-    print('\nRunning twitter volume scraper...', end='\n')
+    print('Running twitter volume scraper...\n')
     df = create_dataframe()
     export_data(df)
-    print('\nTwitter volume updated', end='\n')
+    print('Twitter volume updated\n')
 
     # Return for script
     return df

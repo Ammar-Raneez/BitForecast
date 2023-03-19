@@ -1,5 +1,6 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
+import math
 from tqdm import tqdm
 
 def preprocess(text):
@@ -57,7 +58,19 @@ def analyze_sentiment(dfs):
             negative_scores.append(neg)
             positive_scores.append(pos)
             neutral_scores.append(neu)
-            compound_scores.append(compound)
+
+            # Weigh the compound score here based on the proposed formula
+            weighted_compound_score = compound
+            alpha, beta, gamma, delta = 0.5, 0.3, 0.1, 0.1
+            followers, lists, retweets, likes = df.iloc[j]['user_total_followers'], df.iloc[j]['user_total_listed'], df.iloc[j]['tweet_retweets'], df.iloc[j]['tweet_likes']
+            weighted_followers = alpha * math.log10(followers + 1)
+            weighted_lists = beta * math.log10(lists + 1)
+            weighted_retweets = gamma * math.log10(retweets + 1)
+            weighted_likes = delta * math.log10(likes + 1)
+            weighted_sum = weighted_followers + weighted_lists + weighted_retweets + weighted_likes
+            influencer_score = weighted_sum / (weighted_sum + 1)
+            weighted_compound_score *= influencer_score
+            compound_scores.append(weighted_compound_score)
 
         df['negative_score'] = negative_scores
         df['positive_score'] = positive_scores
@@ -73,7 +86,7 @@ def analyze_sentiments(dfs):
     dfs -> comes from the tweet_scraper script (only the new fetched dates)
     '''
 
-    print('\nRunning sentiment analysis...', end='\n')
+    print('Running sentiment analysis...\n')
     sentiment_analyzed_dfs = analyze_sentiment(dfs)
-    print('\nTweet sentiment analysis performed', end='\n')
+    print('Tweet sentiment analysis performed\n')
     return sentiment_analyzed_dfs

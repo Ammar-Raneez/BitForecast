@@ -5,6 +5,7 @@ This file contains common utility functions that are used in multivariate.py and
 import numpy as np
 import tensorflow as tf
 import os
+import datetime
 
 from src.util.lts import LTSCell
 
@@ -17,6 +18,18 @@ def get_future_dates(start_date, into_future, offset=1):
   start_date = start_date + np.timedelta64(offset, 'D')
   end_date = start_date + np.timedelta64(into_future, 'D')
   return np.arange(start_date, end_date, dtype='datetime64[D]')
+
+def check_data(data):
+  '''
+  Check if available data is up to date
+  '''
+
+  print('Checking if data is up to date...\n')
+  today =  datetime.datetime.today().strftime('%Y-%m-%d')
+  avail_date = data['data'].index[-1].strftime('%Y-%m-%d')
+  print('Todays date: ', today, end='\n\n')
+  print('Available date: ', avail_date, end='\n\n')
+  return today == avail_date
 
 def get_upper_lower_bounds(preds):
   '''
@@ -37,8 +50,10 @@ def save_ensemble(ensemble, path):
   Not used in deployment
   '''
 
+  print('Saving ensemble locally...\n')
   for i, model in enumerate(ensemble):
     model.save(f'{path}/model_{i}')
+  print('Ensemble saved locally\n')
 
 def load_ensemble(path):
   '''
@@ -63,6 +78,7 @@ def create_ensemble(
 
   ensemble = []
 
+  print('Creating ensemble...\n')
   for i in range(num_models):
     for loss_fn in loss_fns:
       print(f'Model loss: {loss_fn} | model number: {i}')
@@ -109,4 +125,5 @@ def create_ensemble(
 
       ensemble.append(model)
 
+  print('Ensemble created\n')
   return ensemble

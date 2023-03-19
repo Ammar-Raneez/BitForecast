@@ -61,7 +61,7 @@ def create_multivariate_ensemble():
   '''
 
   data = create_dataset()
-  ensemble = create_ensemble(data['data'])
+  ensemble = create_ensemble(data['dataset_all'])
   save_ensemble(ensemble, ENSEMBLE_PATH)
   return ensemble
 

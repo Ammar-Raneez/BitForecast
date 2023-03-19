@@ -55,19 +55,19 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[BTC_PRICES_COLLECTION].delete_many({})
     dataset_db[BTC_PRICES_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def update_prices():
     '''
     Main runner
     '''
 
-    print('\nRunning historical prices scraper...', end='\n')
+    print('Running historical prices scraper...\n')
     today = datetime.now().strftime('%m/%d/%Y')
     prices = get_crypto_data('01/01/2014', today)
     df = clean_data(prices)
     export_data(df)
-    print('\nHistorical prices data updated', end='\n')
+    print('Historical prices data updated\n')
 
     # Return for script
     return df

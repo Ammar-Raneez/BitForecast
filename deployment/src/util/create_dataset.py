@@ -152,7 +152,7 @@ def export_data(df):
     dataset_db = init_mongodb()
     dataset_db[FINAL_DATASET_COLLECTION].delete_many({})
     dataset_db[FINAL_DATASET_COLLECTION].insert_one(df_dict)
-    print('Saved data to MongoDB')
+    print('Saved data to MongoDB\n')
 
 def create_final_dataset(
     prices,
@@ -165,7 +165,7 @@ def create_final_dataset(
     Main runner
     '''
 
-    print('\nRunning final dataset creation...', end='\n')
+    print('Running final dataset creation...\n')
     combined_df = create_combined_dataset(
         prices,
         block_reward,
@@ -175,4 +175,4 @@ def create_final_dataset(
     )
 
     export_data(combined_df)
-    print('\nFinal dataset created', end='\n')
+    print('Final dataset created\n')
