@@ -28,8 +28,8 @@ def get_twitter_volume():
     try:
         # Column appears only when its being read from a CSV
         twitter_volume.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_t_volume = twitter_volume.loc[~(twitter_volume.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_t_volume
@@ -43,8 +43,8 @@ def get_block_reward():
 
     try:
         block_reward.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_block_reward = block_reward.loc[~(block_reward.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_block_reward
@@ -58,8 +58,8 @@ def get_google_trends():
 
     try:
         gtrends.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_gtrends = gtrends.loc[~(gtrends.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_gtrends
@@ -74,8 +74,8 @@ def get_twitter_sentiment():
 
     try:
         twitter_sentiments.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_twitter_sentiments = twitter_sentiments.loc[~(twitter_sentiments.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
     return filtered_twitter_sentiments

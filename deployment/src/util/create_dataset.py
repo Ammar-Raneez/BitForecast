@@ -10,8 +10,8 @@ def get_prices(historical_prices):
     # Safe check to remove a column that comes sometimes
     try:
         historical_prices.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     historical_prices.drop(['max', 'min', 'open'], axis=1, inplace=True)
     filtered_prices = historical_prices.loc[~(historical_prices.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
@@ -25,8 +25,8 @@ def get_twitter_volume(twitter_volume):
     # Safe check to remove a column that comes sometimes
     try:
         twitter_volume.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_t_volume = twitter_volume.loc[~(twitter_volume.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_t_volume
@@ -39,8 +39,8 @@ def get_block_reward(block_reward):
     # Safe check to remove a column that comes sometimes
     try:
         block_reward.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_block_reward = block_reward.loc[~(block_reward.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_block_reward
@@ -53,8 +53,8 @@ def get_google_trends(gtrends):
     # Safe check to remove a column that comes sometimes
     try:
         gtrends.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     filtered_gtrends = gtrends.loc[~(gtrends.loc[:, 'Date'] < '2015-01-01')].copy(deep=True)
     return filtered_gtrends
@@ -67,8 +67,8 @@ def get_twitter_sentiment(twitter_sentiments):
     # Safe check to remove a column that comes sometimes
     try:
         twitter_sentiments.drop(['Unnamed: 0'], axis=1, inplace=True)
-    except:
-        pass
+    except Exception:
+        print('Unnamaed: 0 Column not present')
 
     twitter_sentiments.drop(['negative_score', 'neutral_score', 'positive_score'], axis=1, inplace=True)
     filtered_twitter_sentiments = twitter_sentiments.loc[~(twitter_sentiments.loc[:, 'date'] < '2015-01-01')].copy(deep=True)
