@@ -106,25 +106,36 @@ def multivariate_forecast():
   Create the forecast
   '''
 
+  print('Creating multivariate dataset...\n')
   data = create_multivariate_dataset()
-  ensemble = load_ensemble(ENSEMBLE_PATH)
+  print('Multivariate dataset created\n')
 
+  print('Loading in model ensemble...\n')
+  ensemble = load_ensemble(ENSEMBLE_PATH)
+  print('Model ensemble loaded\n')
+
+  print('Making forecast...\n')
   future_forecast = make_future_forecasts(
     values=data['x_all'],
     ensemble=ensemble,
     window_size=WINDOW_SIZE
   )
+  print('Forecast created\n')
 
   # last_timestep = data['data'].index[-1]
   # last_price = data['data']['Price'][-1]
 
+  print('Obtaining forecast timesteps...\n')
   next_time_steps = get_future_dates(
     start_date=data['data'].index[-1], 
     into_future=1
   )
+  print('Forecast timesteps obtained\n')
 
+  print('Obtaining forecast and bounds...\n')
   point_future = np.median(future_forecast, axis=0)
   lower_future, upper_future = get_upper_lower_bounds(future_forecast)
+  print('Forecast and bounds obtained\n')
 
   # Only needed when joining the graph lines
   # next_time_steps = np.insert(next_time_steps, 0, last_timestep)

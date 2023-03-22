@@ -117,26 +117,37 @@ def univariate_forecast(into_future=5):
   Create the forecast
   '''
 
+  print('Creating univariate dataset...\n')
   data = create_univariate_dataset()
-  ensemble = load_ensemble(ENSEMBLE_PATH)
+  print('Univariate dataset created\n')
 
+  print('Loading in model ensemble...\n')
+  ensemble = load_ensemble(ENSEMBLE_PATH)
+  print('Model ensemble loaded\n')
+
+  print('Making forecast...\n')
   future_forecast = make_future_forecasts(
     values=data['y_all'],
     ensemble=ensemble,
     into_future=into_future,
     window_size=WINDOW_SIZE
   )
+  print('Forecast created\n')
 
   # last_timestep = raw_data.index[-1]
   # last_price = raw_data['Price'][-1]
 
+  print('Obtaining forecast timesteps...\n')
   next_time_steps = get_future_dates(
     start_date=data['data'].index[-1], 
     into_future=into_future
   )
+  print('Forecast timesteps obtained\n')
 
+  print('Obtaining forecast and bounds...\n')
   point_future = np.median(future_forecast, axis=0)
   lower_future, upper_future = get_upper_lower_bounds(future_forecast)
+  print('Forecast and bounds obtained\n')
 
   # Only needed when joining the graph lines
   # next_time_steps = np.insert(next_time_steps, 0, last_timestep)
