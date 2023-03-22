@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Col, Row, Typography, Select } from 'antd';
+import { Col, Row, Spin, Typography } from 'antd';
 import {
   MoneyCollectOutlined,
   DollarCircleOutlined,
@@ -18,20 +18,23 @@ import millify from 'millify';
 import Loader from './Loader';
 import LineChart from './LineChart';
 import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoDetailsApi';
+import { getDaysArray } from '../utils/util';
+import { useMultivariateForecastMutation, useUnivariateForecastMutation } from '../services/forecastApi';
 
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 const CryptoDetails = () => {
   const { coinId } = useParams();
   const [timeperiod, setTimeperiod] = useState('7d');
+  const [dates, setDates] = useState([]);
+  const [forecastedData, setForecastedData] = useState();
   const { data, isFetching: isFetchingDetails } = useGetCryptoDetailsQuery(coinId);
   const { data: coinHistory, isFetching: isFetchingHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
+  const [univariateForecast, { isLoading: isUnivariateForecasting }] = useUnivariateForecastMutation();
+  const [multivariateForecast, { isLoading: isMultivariateForecasting }] = useMultivariateForecastMutation();
   const cryptoDetails = data?.data?.coin;
 
   if (isFetchingDetails || isFetchingHistory) return <Loader />;
-
-  const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
 
   const stats = [
     {
@@ -89,6 +92,35 @@ const CryptoDetails = () => {
     },
   ];
 
+  const forecast = async () => {
+    const startDate = new Date(dates[0]);
+    const endDate = new Date(dates[1]);
+    const days = getDaysArray(startDate, endDate);
+    let forecastData;
+    if (days.length === 1) {
+      try {
+        forecastData = await multivariateForecast();
+      } catch (err) {
+        console.log('Something went wrong');
+        window.globalThis.alert('Something went wrong');
+      }
+    } else {
+      try {
+        forecastData = await univariateForecast({ days: days.length });
+      } catch (err) {
+        console.log('Something went wrong');
+        window.globalThis.alert('Something went wrong');
+      }
+    }
+
+    console.log(forecastData);
+    setForecastedData(forecastData?.data?.output);
+  }
+
+  const onSetRangepicker = (e) => {
+    setDates(e);
+  }
+
   return (
     <Col className="coin-detail-container">
       <Col className="coin-heading-container">
@@ -99,19 +131,22 @@ const CryptoDetails = () => {
           {cryptoDetails.name} live price in US Dollar (USD). View value statistics, market cap and supply.
         </p>
       </Col>
-      <Select
-        defaultValue="7d"
-        className="select-timeperiod"
-        placeholder="Select Timeperiod"
-        onChange={(value) => setTimeperiod(value)}
+      <Spin
+        spinning={isUnivariateForecasting || isMultivariateForecasting}
+        tip="Forecasting... This can take some time"
       >
-        {time.map((date) => <Option key={date}>{date}</Option>)}
-      </Select>
-      <LineChart
-        coinHistory={coinHistory}
-        currentPrice={millify(cryptoDetails?.price)}
-        coinName={cryptoDetails?.name}
-      />
+        <LineChart
+          coinHistory={coinHistory}
+          currentPrice={millify(cryptoDetails?.price)}
+          coinName={cryptoDetails?.name}
+          timeperiod={timeperiod}
+          setTimeperiod={setTimeperiod}
+          dates={dates}
+          onSetRangepicker={onSetRangepicker}
+          forecast={forecast}
+          forecastedData={forecastedData}
+        />
+      </Spin>
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">

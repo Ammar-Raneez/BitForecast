@@ -173,6 +173,7 @@ a:hover {
   justify-content: space-between;
   gap: 50px;
   color: #0071bd;
+  margin-top: 1rem;
 }
 
 .chart-title {
@@ -197,6 +198,12 @@ a:hover {
 
 
 /* Cryptocurrency detail page */
+.date-range-text {
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+}
+
 .coin-detail-container {
   margin: 30px;
 }
@@ -327,7 +334,7 @@ a:hover {
 
 .select-timeperiod {
   width: 200px !important;
-  margin-top: 20px !important;
+  margin-left: 10px !important;
 }
 
 
