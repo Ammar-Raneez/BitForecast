@@ -17,10 +17,17 @@ export const forecastApi = createApi({
         method: 'POST',
       }),
     }),
+    getModelEvaluationResults: builder.query({
+      query: () => ({
+        url: '/api/v1/models/get-metrics',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   useUnivariateForecastMutation,
-  useMultivariateForecastMutation
+  useMultivariateForecastMutation,
+  useGetModelEvaluationResultsQuery,
 } = forecastApi;
