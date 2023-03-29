@@ -33,13 +33,13 @@ def get_metrics():
     multivariate_mae, multivariate_mse, multivariate_rmse, multivariate_mape, multivariate_mase = multivariate_evaluation['mae'], multivariate_evaluation['mse'], multivariate_evaluation['rmse'], multivariate_evaluation['mape'], multivariate_evaluation['mase']
 
     univariate_metrics = {
-      'Naive': { 'mae': univariate_mae[0], 'mse': univariate_mse[0], 'rmse': univariate_rmse[0], 'mape': univariate_mape[0], 'mase': univariate_mase[0] },
-      'Ensemble': { 'mae': univariate_mae[1], 'mse': univariate_mse[1], 'rmse': univariate_rmse[1], 'mape': univariate_mape[1], 'mase': univariate_mase[1] }
+      'Naive': { 'mae': round(univariate_mae[0], 3), 'mse': round(univariate_mse[0], 3), 'rmse': round(univariate_rmse[0], 3), 'mape': f'{round(float(univariate_mape[0][:-1]), 3)}%', 'mase': round(univariate_mase[0], 3) },
+      'Ensemble': { 'mae': round(univariate_mae[1], 3), 'mse': round(univariate_mse[1], 3), 'rmse': round(univariate_rmse[1], 3), 'mape': f'{round(float(univariate_mape[1][:-1]), 3)}%', 'mase': round(univariate_mase[1], 3) },
     }
 
     multivariate_metrics = {
-      'Naive': { 'mae': multivariate_mae[0], 'mse': multivariate_mse[0], 'rmse': multivariate_rmse[0], 'mape': multivariate_mape[0], 'mase': multivariate_mase[0] },
-      'Ensemble': { 'mae': multivariate_mae[1], 'mse': multivariate_mse[1], 'rmse': multivariate_rmse[1], 'mape': multivariate_mape[1], 'mase': multivariate_mase[1] }
+      'Naive': { 'mae': round(multivariate_mae[0], 3), 'mse': round(multivariate_mse[0], 3), 'rmse': round(multivariate_rmse[0], 3), 'mape': f'{round(float(multivariate_mape[0][:-1]), 3)}%', 'mase': round(multivariate_mase[0], 3) },
+      'Ensemble': { 'mae': round(multivariate_mae[1], 3), 'mse': round(multivariate_mse[1], 3), 'rmse': round(multivariate_rmse[1], 3), 'mape': f'{round(float(multivariate_mape[1][:-1]), 3)}%', 'mase': round(multivariate_mase[1], 3) },
     }
 
     return {
