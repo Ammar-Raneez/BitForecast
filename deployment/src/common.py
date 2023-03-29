@@ -140,8 +140,8 @@ def get_evaluation_results():
   Get the evaluation results of the ensemble model in use
   '''
 
-  multivariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/multivariate_evaluation.csv')
-  univariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/univariate_evaluation.csv')
+  multivariate_evaluation = pd.read_csv(MULTIVARIATE_EVALUATION_PATH)
+  univariate_evaluation = pd.read_csv(UNIVARIATE_EVALUATION_PATH)
 
   univariate_mae, univariate_mse, univariate_rmse, univariate_mape, univariate_mase = univariate_evaluation['mae'], univariate_evaluation['mse'], univariate_evaluation['rmse'], univariate_evaluation['mape'], univariate_evaluation['mase']
   multivariate_mae, multivariate_mse, multivariate_rmse, multivariate_mape, multivariate_mase = multivariate_evaluation['mae'], multivariate_evaluation['mse'], multivariate_evaluation['rmse'], multivariate_evaluation['mape'], multivariate_evaluation['mase']
