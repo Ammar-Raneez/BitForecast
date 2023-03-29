@@ -3,11 +3,18 @@ This file contains common utility functions that are used in multivariate.py and
 '''
 
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 import os
 import datetime
 
 from src.util.lts import LTSCell
+
+MULTIVARIATE_EVALUATION_PATH = os.path.join(os.getcwd(), 'src', 'models', 'multivariate_evaluation.csv')
+MULTIVARIATE_EVALUATION_PATH = MULTIVARIATE_EVALUATION_PATH.replace('\\', '/')
+
+UNIVARIATE_EVALUATION_PATH = os.path.join(os.getcwd(), 'src', 'models', 'univariate_evaluation.csv')
+UNIVARIATE_EVALUATION_PATH = UNIVARIATE_EVALUATION_PATH.replace('\\', '/')
 
 def get_future_dates(start_date, into_future, offset=1):
   '''
@@ -127,3 +134,26 @@ def create_ensemble(
 
   print('Ensemble created\n')
   return ensemble
+
+def get_evaluation_results():
+  '''
+  Get the evaluation results of the ensemble model in use
+  '''
+
+  multivariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/multivariate_evaluation.csv')
+  univariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/univariate_evaluation.csv')
+
+  univariate_mae, univariate_mse, univariate_rmse, univariate_mape, univariate_mase = univariate_evaluation['mae'], univariate_evaluation['mse'], univariate_evaluation['rmse'], univariate_evaluation['mape'], univariate_evaluation['mase']
+  multivariate_mae, multivariate_mse, multivariate_rmse, multivariate_mape, multivariate_mase = multivariate_evaluation['mae'], multivariate_evaluation['mse'], multivariate_evaluation['rmse'], multivariate_evaluation['mape'], multivariate_evaluation['mase']
+
+  univariate_metrics = {
+    'Naive': { 'mae': univariate_mae[0], 'mse': univariate_mse[0], 'rmse': univariate_rmse[0], 'mape': univariate_mape[0], 'mase': univariate_mase[0] },
+    'Ensemble': { 'mae': univariate_mae[1], 'mse': univariate_mse[1], 'rmse': univariate_rmse[1], 'mape': univariate_mape[1], 'mase': univariate_mase[1] }
+  }
+
+  multivariate_metrics = {
+    'Naive': { 'mae': multivariate_mae[0], 'mse': multivariate_mse[0], 'rmse': multivariate_rmse[0], 'mape': multivariate_mape[0], 'mase': multivariate_mase[0] },
+    'Ensemble': { 'mae': multivariate_mae[1], 'mse': multivariate_mse[1], 'rmse': multivariate_rmse[1], 'mape': multivariate_mape[1], 'mase': multivariate_mase[1] }
+  }
+
+  return univariate_metrics, multivariate_metrics

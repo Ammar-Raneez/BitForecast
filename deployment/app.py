@@ -3,7 +3,7 @@ from flask_restful import Api
 from flask import abort, Flask, jsonify, make_response, request
 
 from src.update_data import update_data
-from src.common import load_ensemble
+from src.common import load_ensemble, get_evaluation_results
 from src.univariate import univariate_forecast, create_univariate_ensemble
 from src.multivariate import multivariate_forecast, create_multivariate_ensemble
 
@@ -17,6 +17,22 @@ API = Api(app)
 
 
 ### Main Routes ###
+@app.route('/api/v1/models/get-metrics', methods=['GET'])
+def get_metrics():
+  try:
+    univariate_metrics, multivariate_metrics = get_evaluation_results()
+
+    return {
+      'output': {
+        'univariate_metrics': univariate_metrics,
+        'multivariate_metrics': multivariate_metrics
+      },
+      'status': 200
+    }, 200
+  except Exception as e:
+    print(e)
+    abort(make_response(jsonify(message='Something went wrong while getting evaluation metrics'), 500))
+
 @app.route('/api/v1/models/univariate', methods=['POST'])
 def univariate():
   inputs = request.get_json()
