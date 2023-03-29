@@ -42,15 +42,30 @@ const Cryptocurrencies = ({ simplified }) => {
             key={currency.uuid}
           >
             <Link key={currency.uuid} to={`/crypto/${currency.uuid}`}>
-              <Card
-                title={`${currency.rank}. ${currency.name}`}
-                extra={<img className="crypto-image" src={currency.iconUrl} alt="coin" />}
-                hoverable
-              >
-                <p>Price: {millify(currency.price)}</p>
-                <p>Market Cap: {millify(currency.marketCap)}</p>
-                <p>Daily Change: {currency.change}%</p>
-              </Card>
+              {currency.name?.toLowerCase() === 'bitcoin' ? (
+                <Card
+                  title={`${currency.rank}. ${currency.name}`}
+                  extra={<img className="crypto-image" src={currency.iconUrl} alt="coin" />}
+                  headStyle={{ backgroundColor: '#0071BD33' }}
+                  bodyStyle={{ backgroundColor: '#0071BD33' }}
+                  style={{ border: '2px solid #0071BD'}}
+                  hoverable
+                >
+                  <p>Price: {millify(currency.price)}</p>
+                  <p>Market Cap: {millify(currency.marketCap)}</p>
+                  <p>Daily Change: {currency.change}%</p>
+                </Card>
+              ) : (
+                <Card
+                  title={`${currency.rank}. ${currency.name}`}
+                  extra={<img className="crypto-image" src={currency.iconUrl} alt="coin" />}
+                  hoverable
+                >
+                  <p>Price: {millify(currency.price)}</p>
+                  <p>Market Cap: {millify(currency.marketCap)}</p>
+                  <p>Daily Change: {currency.change}%</p>
+                </Card>
+              )}
             </Link>
           </Col>
         ))}

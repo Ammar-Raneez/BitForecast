@@ -11,6 +11,7 @@ import {
   Login,
   Navbar,
   News,
+  Metrics,
 } from './components';
 import { login, logout } from './features/userSlice';
 import { auth } from './firebase';
@@ -43,6 +44,11 @@ function App() {
               <Route exact path="/cryptocurrencies" element={<Cryptocurrencies />} />
               <Route exact path="/crypto/:coinId" element={<CryptoDetails />} />
               <Route exact path="/news" element={<News />} />
+              {user?.payload ? (
+                <Route exact path="/metrics" element={<Metrics />} />
+              ) : (
+                <Route exact path="/metrics" element={<Navigate to="/" />} />
+              )}
               {!user?.payload ? (
                 <Route exact path="/login" element={<Login />} />
               ) : (
