@@ -1,7 +1,6 @@
 # BitForecast
 
 ![Vercel](https://vercelbadge.vercel.app/api/Ammar-Raneez/BitForecast)
-
 [![CodeQL](https://github.com/Ammar-Raneez/BitForecast/actions/workflows/codeql.yml/badge.svg)](https://github.com/Ammar-Raneez/BitForecast/actions/workflows/codeql.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/ammar-raneez/bitforecast/badge)](https://www.codefactor.io/repository/github/ammar-raneez/bitforecast)
 
