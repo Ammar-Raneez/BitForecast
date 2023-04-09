@@ -47,15 +47,8 @@ function Login() {
           </Row>
           <Row>
             <Typography.Text level={2} className="admin-login-desc">
-              Login into the BitForecast system to update the machine learning model being used
+              Login into the BitForecast system to view the evaluation metrics of the machine learning model being used
               to forecast the Bitcoin prices.
-            </Typography.Text>
-          </Row>
-          <br />
-          <Row>
-            <Typography.Text level={2} className="admin-login-desc">
-              By authorizing yourself you will be able to update the model hyperparameters and retrain
-              the model.
             </Typography.Text>
           </Row>
         </Col>
