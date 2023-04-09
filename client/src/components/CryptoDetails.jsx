@@ -28,8 +28,8 @@ const CryptoDetails = () => {
   const [timeperiod, setTimeperiod] = useState('7d');
   const [dates, setDates] = useState([]);
   const [forecastedData, setForecastedData] = useState();
-  const { data, isFetching: isFetchingDetails } = useGetCryptoDetailsQuery(coinId);
-  const { data: coinHistory, isFetching: isFetchingHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
+  const { data, isFetching: isFetchingDetails, refetch: refetchDetails } = useGetCryptoDetailsQuery(coinId);
+  const { data: coinHistory, isFetching: isFetchingHistory, refetch: refetchHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
   const [univariateForecast, { isLoading: isUnivariateForecasting }] = useUnivariateForecastMutation();
   const [multivariateForecast, { isLoading: isMultivariateForecasting }] = useMultivariateForecastMutation();
   const cryptoDetails = data?.data?.coin;
@@ -113,8 +113,17 @@ const CryptoDetails = () => {
       }
     }
 
-    console.log(forecastData);
     setForecastedData(forecastData?.data?.output);
+  }
+
+  const resetForecast = () => {
+    setForecastedData();
+    setDates([]);
+  }
+
+  const invalidateDetailsAndRefetch = () => {
+    refetchDetails();
+    refetchHistory();
   }
 
   const onSetRangepicker = (e) => {
@@ -145,6 +154,8 @@ const CryptoDetails = () => {
           onSetRangepicker={onSetRangepicker}
           forecast={forecast}
           forecastedData={forecastedData}
+          invalidateDetailsAndRefetch={invalidateDetailsAndRefetch}
+          resetForecast={resetForecast}
         />
       </Spin>
       <Col className="stats-container">
@@ -158,7 +169,7 @@ const CryptoDetails = () => {
             </p>
           </Col>
           {stats.map(({ icon, title, value }) => (
-            <Col className="coin-stats" key={value}>
+            <Col className="coin-stats" key={value + title}>
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
@@ -175,7 +186,7 @@ const CryptoDetails = () => {
             </p>
           </Col>
           {genericStats.map(({ icon, title, value }) => (
-            <Col className="coin-stats" key={value}>
+            <Col className="coin-stats" key={value + title}>
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>

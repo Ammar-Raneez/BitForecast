@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Button, Col, DatePicker, Row, Select, Space, Typography } from 'antd';
 import {
@@ -37,12 +37,14 @@ const LineChart = ({
   onSetRangepicker,
   forecast,
   forecastedData,
+  invalidateDetailsAndRefetch,
+  resetForecast,
 }) => {
   const [coinPrice, setCoinPrice] = useState([]);
   const [coinTimestamp, setCoinTimestamp] = useState([]);
   const [data, setData] = useState();
 
-  useEffect(() => {
+  const resetDatasets = useCallback(() => {
     const timestamps = [];
     const prices = [];
 
@@ -70,10 +72,16 @@ const LineChart = ({
     setCoinPrice(prices);
     setCoinTimestamp(timestamps);
     setData(graphData);
+    resetForecast();
+  }, []);
+
+  useEffect(() => {
+    resetDatasets();
   }, []);
 
   useEffect(() => {
     if (forecastedData && coinPrice && coinTimestamp) {
+      console.log('triggered')
       const timestamps = [];
 
       forecastedData?.['Predicted For']?.forEach((date) => {
@@ -105,7 +113,7 @@ const LineChart = ({
       ];
 
       const graphData = {
-        labels: [...coinTimestamp, timestamps],
+        labels: [...coinTimestamp, ...timestamps],
         datasets: [
           {
             label: 'Price in USD',
@@ -140,7 +148,7 @@ const LineChart = ({
     },
   };
 
-  const time = ['3h', '24h', '3d', '5d', '7d', '10d', '30d', '1y', '3m', '3y', '5y'];
+  const time = ['24h', '7d', '30d', '3m', '1y', '3y', '5y'];
 
   const disabledDate = (current) => {
     return current && current < dayjs().endOf('day');
@@ -168,7 +176,11 @@ const LineChart = ({
             className="select-timeperiod"
             placeholder="Select Timeperiod"
             value={timeperiod}
-            onChange={(value) => setTimeperiod(value)}
+            onChange={(value) => {
+              setTimeperiod(value);
+              invalidateDetailsAndRefetch();
+              resetDatasets();
+            }}
           >
             {time.map((date) => <Option key={date}>{date}</Option>)}
           </Select>
