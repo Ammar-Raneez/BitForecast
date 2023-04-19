@@ -1,7 +1,5 @@
-# Your workflow name.
 name: Deploy bitforecast server to heroku.
 
-# Run workflow on every push to main branch.
 on:
   push:
     branches: [main]
