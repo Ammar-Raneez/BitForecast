@@ -1,15 +1,13 @@
-name: Deploy bitforecast server to heroku.
+name: Heroku CI/CD
 
 on:
   push:
     branches: [main]
 
-# jobs.
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Check-out repository.
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -21,10 +19,7 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           dockerfile_directory: ./
           dockerfile_name: Dockerfile
-
-          # Additional options of docker build command.
           docker_options: "--no-cache"
 
           # Process type of the docker container.
-          # By default, this argument is set to "web".
           process_type: web
