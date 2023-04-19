@@ -20,6 +20,4 @@ jobs:
           dockerfile_directory: ./
           dockerfile_name: Dockerfile
           docker_options: "--no-cache"
-
-          # Process type of the docker container.
           process_type: web
