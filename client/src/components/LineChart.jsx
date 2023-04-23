@@ -199,7 +199,13 @@ const LineChart = ({
                 />
               </Row>
               <Row justify="end">
-                <Button type="primary" onClick={forecast}>Forecast</Button>
+                <Button
+                  type="primary"
+                  onClick={forecast}
+                  disabled={!dates || dates.length === 0}
+                >
+                  Forecast
+                </Button>
               </Row>
             </Space>
           </Col>
