@@ -105,6 +105,7 @@ function Metrics() {
         dataSource={univariateMetrics}
         columns={columns}
         pagination={false}
+        scroll={{ x: true }}
       />
       <br />
       <Typography.Title level={3} className="heading">Multivariate Model Metrics</Typography.Title>
@@ -112,6 +113,7 @@ function Metrics() {
         dataSource={multivariateMetrics}
         columns={columns}
         pagination={false}
+        scroll={{ x: true }}
       />
     </Layout>
   );
