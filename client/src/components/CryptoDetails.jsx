@@ -27,6 +27,7 @@ const CryptoDetails = () => {
   const { coinId } = useParams();
   const [timeperiod, setTimeperiod] = useState('7d');
   const [dates, setDates] = useState([]);
+  const [forecastFailed, setForecastFailed] = useState(false);
   const [forecastedData, setForecastedData] = useState();
   const { data, isFetching: isFetchingDetails, refetch: refetchDetails } = useGetCryptoDetailsQuery(coinId);
   const { data: coinHistory, isFetching: isFetchingHistory, refetch: refetchHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
@@ -97,23 +98,33 @@ const CryptoDetails = () => {
     const endDate = new Date(dates[1]);
     const days = getDaysArray(startDate, endDate);
     let forecastData;
-    if (days.length === 1) {
-      try {
-        forecastData = await multivariateForecast();
-      } catch (err) {
-        console.log('Something went wrong');
-        window.globalThis.alert('Something went wrong');
-      }
-    } else {
-      try {
-        forecastData = await univariateForecast({ days: days.length });
-      } catch (err) {
-        console.log('Something went wrong');
-        window.globalThis.alert('Something went wrong');
-      }
-    }
 
-    setForecastedData(forecastData?.data?.output);
+    if (days.length === 1) {
+      multivariateForecast().unwrap()
+        .then((res) => {
+          forecastData = res.output;
+          setForecastFailed(false);
+          console.log(forecastData)
+          setForecastedData(forecastData);
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log('Something went wrong');
+          setForecastFailed(true);
+        });
+    } else {
+      univariateForecast({ days: days.length }).unwrap()
+        .then((res) => {
+          forecastData = res.output;
+          setForecastFailed(false);
+          setForecastedData(forecastData);
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log('Something went wrong');
+          setForecastFailed(true);
+        });
+    }
   }
 
   const resetForecast = () => {
@@ -156,6 +167,7 @@ const CryptoDetails = () => {
           forecastedData={forecastedData}
           invalidateDetailsAndRefetch={invalidateDetailsAndRefetch}
           resetForecast={resetForecast}
+          forecastFailed={forecastFailed}
         />
       </Spin>
       <Col className="stats-container">

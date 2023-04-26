@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Button, Col, DatePicker, Row, Select, Space, Typography } from 'antd';
+import { Alert, Button, Col, DatePicker, Row, Select, Space, Typography } from 'antd';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,6 +39,7 @@ const LineChart = ({
   forecastedData,
   invalidateDetailsAndRefetch,
   resetForecast,
+  forecastFailed,
 }) => {
   const [coinPrice, setCoinPrice] = useState([]);
   const [coinTimestamp, setCoinTimestamp] = useState([]);
@@ -81,7 +82,6 @@ const LineChart = ({
 
   useEffect(() => {
     if (forecastedData && coinPrice && coinTimestamp) {
-      console.log('triggered')
       const timestamps = [];
 
       forecastedData?.['Predicted For']?.forEach((date) => {
@@ -211,6 +211,16 @@ const LineChart = ({
           </Col>
         )}
       </Row>
+      <br />
+      {forecastFailed && (
+        <Alert
+          message="Forecast Error"
+          description="Something went wrong while forecasting. Please contact ammarraneez@gmail.com."
+          type="error"
+          showIcon
+        />
+      )}
+      <br />
       {data && <Line data={data} options={options} />}
     </>
   );
