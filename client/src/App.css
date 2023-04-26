@@ -337,6 +337,14 @@ a:hover {
   margin-left: 10px !important;
 }
 
+.coin-forecast-small-screen {
+  color: var(--bgDark) !important;
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--bgSecondary);
+  border: 1px solid var(--bgDark);
+}
+
 
 /* Login form */
 .admin-login-branding {
@@ -394,9 +402,13 @@ a:hover {
 
 @media screen and (max-width: 1050px) {
   .nav-container {
-    height: 6vh;
+    height: auto;
     width: 100%;
     background-color: var(--bgSecondary);
+  }
+
+  .navbar-menu {
+    display: block;
   }
 
   .app {

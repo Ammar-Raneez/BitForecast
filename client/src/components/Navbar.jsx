@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Menu, Typography, Avatar } from 'antd';
+import { Menu, Typography, Avatar, Drawer, Button, Space } from 'antd';
 import {
   BulbOutlined,
+  CloseCircleOutlined,
   FundOutlined,
   HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
+  MenuOutlined,
   RadarChartOutlined,
 } from '@ant-design/icons';
 
@@ -17,7 +19,14 @@ import logo from '../images/logo.png';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.user);
+
+  const [windowSize, setWindowSize] = useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
+
   const [menuItems, setMenuItems] = useState();
+  const [showDrawer, setShowDrawer] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,6 +36,18 @@ const Navbar = () => {
         dispatch(logout());
       });
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
 
   useEffect(() => {
     const items = [
@@ -56,11 +77,43 @@ const Navbar = () => {
           <Link to="/">BitForecast</Link>
         </Typography.Title>
       </div>
-      <Menu
-        theme="dark"
-        items={menuItems}
-        className="navbar-menu"
-      />
+      {windowSize[0] > 1000 ? (
+        <Menu
+          theme="dark"
+          items={menuItems}
+          className="navbar-menu"
+          mode="vertical"
+        />
+      ) : (
+        <>
+          <div>
+            <Button
+              type="primary"
+              onClick={() => setShowDrawer(true)}
+              style={{ height: '100%' }}
+            >
+              <MenuOutlined />
+            </Button>
+          </div>
+          <Drawer
+            placement="left"
+            onClose={() => setShowDrawer(false)}
+            open={showDrawer}
+            headerStyle={{ backgroundColor: '#062848', border: 'none', display: 'flex', justifyContent: 'flex-end' }}
+            bodyStyle={{ backgroundColor: '#062848' }}
+            closeIcon={
+              <CloseCircleOutlined style={{ color: 'white', fontSize: '1.5rem' }} />
+            }
+          >
+            <Menu
+              theme="dark"
+              items={menuItems}
+              className="navbar-menu"
+              mode="vertical"
+            />
+          </Drawer>
+        </>
+      )}
     </div>
   );
 };

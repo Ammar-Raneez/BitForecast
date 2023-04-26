@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Col, Row, Spin, Typography } from 'antd';
 import {
@@ -25,15 +25,42 @@ const { Title, Text } = Typography;
 
 const CryptoDetails = () => {
   const { coinId } = useParams();
+
+  const [windowSize, setWindowSize] = useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
+
   const [timeperiod, setTimeperiod] = useState('7d');
   const [dates, setDates] = useState([]);
   const [forecastFailed, setForecastFailed] = useState(false);
   const [forecastedData, setForecastedData] = useState();
-  const { data, isFetching: isFetchingDetails, refetch: refetchDetails } = useGetCryptoDetailsQuery(coinId);
-  const { data: coinHistory, isFetching: isFetchingHistory, refetch: refetchHistory } = useGetCryptoHistoryQuery({ coinId, timeperiod });
+
+  const {
+    data,
+    isFetching: isFetchingDetails,
+    refetch: refetchDetails,
+  } = useGetCryptoDetailsQuery(coinId);
+  const {
+    data: coinHistory,
+    isFetching: isFetchingHistory,
+    refetch: refetchHistory
+  } = useGetCryptoHistoryQuery({ coinId, timeperiod });
   const [univariateForecast, { isLoading: isUnivariateForecasting }] = useUnivariateForecastMutation();
   const [multivariateForecast, { isLoading: isMultivariateForecasting }] = useMultivariateForecastMutation();
   const cryptoDetails = data?.data?.coin;
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
 
   if (isFetchingDetails || isFetchingHistory) return <Loader />;
 
@@ -151,25 +178,31 @@ const CryptoDetails = () => {
           {cryptoDetails.name} live price in US Dollar (USD). View value statistics, market cap and supply.
         </p>
       </Col>
-      <Spin
-        spinning={isUnivariateForecasting || isMultivariateForecasting}
-        tip="Forecasting... This can take some time"
-      >
-        <LineChart
-          coinHistory={coinHistory}
-          currentPrice={millify(cryptoDetails?.price)}
-          coinName={cryptoDetails?.name}
-          timeperiod={timeperiod}
-          setTimeperiod={setTimeperiod}
-          dates={dates}
-          onSetRangepicker={onSetRangepicker}
-          forecast={forecast}
-          forecastedData={forecastedData}
-          invalidateDetailsAndRefetch={invalidateDetailsAndRefetch}
-          resetForecast={resetForecast}
-          forecastFailed={forecastFailed}
-        />
-      </Spin>
+      {windowSize[0] > 1000 ? (
+        <Spin
+          spinning={isUnivariateForecasting || isMultivariateForecasting}
+          tip="Forecasting... This can take some time"
+        >
+          <LineChart
+            coinHistory={coinHistory}
+            currentPrice={millify(cryptoDetails?.price)}
+            coinName={cryptoDetails?.name}
+            timeperiod={timeperiod}
+            setTimeperiod={setTimeperiod}
+            dates={dates}
+            onSetRangepicker={onSetRangepicker}
+            forecast={forecast}
+            forecastedData={forecastedData}
+            invalidateDetailsAndRefetch={invalidateDetailsAndRefetch}
+            resetForecast={resetForecast}
+            forecastFailed={forecastFailed}
+          />
+        </Spin>
+      ) : (
+        <Title level={3} className="coin-forecast-small-screen">
+          Forecasting is available only in larger screens. Please use your computer instead.
+        </Title>
+      )}
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">
