@@ -5,7 +5,7 @@ from datetime import datetime
 from src.util.mongodb import init_mongodb, BTC_PRICES_COLLECTION
 
 # API reference: http://api.scraperlink.com/investpy/
-BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC&key=474f2c8d88ee117dc1408e97d03c6a24a745db9c'
+BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC'
 
 def get_crypto_data(start, end):
     '''
