@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 # API reference: http://api.scraperlink.com/investpy/
-BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC&key=474f2c8d88ee117dc1408e97d03c6a24a745db9c'
+BASE_URL = 'http://api.scraperlink.com/investpy/?email=ammarraneez@gmail.com&type=historical_data&product=cryptos&symbol=BTC'
 FILE_PATH = 'D:/Uni/FYP/GitHub/BitForecast/ml/data/BTC_Prices.csv'
 
 def get_crypto_data(start, end):
