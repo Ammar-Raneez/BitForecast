@@ -1,3 +1,7 @@
+'''
+This file fetches the Twitter sentiment required by the forecasting model
+'''
+
 import sys
 sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
 

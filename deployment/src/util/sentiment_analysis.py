@@ -1,3 +1,8 @@
+'''
+This file will perform sentiment analysis on the obtained dataframes via
+the VADER sentiment library
+'''
+
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import math

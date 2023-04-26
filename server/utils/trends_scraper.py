@@ -1,3 +1,7 @@
+'''
+This file fetches the Google Trends values required by the forecasting model
+'''
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd

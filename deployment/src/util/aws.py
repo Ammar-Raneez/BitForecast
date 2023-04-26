@@ -1,3 +1,8 @@
+'''
+This file sets up required AWS configuration to enable storage of
+the models into an S3 bucket upon completion of training
+'''
+
 import boto3
 import tempfile
 

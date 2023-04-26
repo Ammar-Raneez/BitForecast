@@ -1,8 +1,11 @@
+'''
+cron job to update data
+'''
+
 from flask import abort, jsonify, make_response
 
 from src.update_data import update_data
 
-### cron to update data ###
 def update_datasets():
   try:
     update_data()

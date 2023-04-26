@@ -1,3 +1,8 @@
-This is a standalone directory used for deployment and hosting of the ML model.
+# Getting started with the deployment server
 
-* The files here are similarly structured to that of the server directory.
+### Development setup
+* Create a new virtual environment by `pip -m venv venv`
+* Ensure that it is activated by running `source venv/scripts/activate`
+* Install requirements by running `pip install requirements.txt`
+* Add required configuration - create a `.env` file containing the keys mentioned in the `.env.example`.
+* Run the server via `python app.py`

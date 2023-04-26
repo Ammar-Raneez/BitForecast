@@ -1,3 +1,7 @@
+'''
+This file fetches the historical prices required by the forecasting model
+'''
+
 import requests
 import pandas as pd
 from datetime import datetime

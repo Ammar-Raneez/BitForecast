@@ -1,3 +1,8 @@
+'''
+This file will condense dataframes for each date into a single dataframe
+with each row as the date.
+'''
+
 import pandas as pd
 from tqdm import tqdm
 

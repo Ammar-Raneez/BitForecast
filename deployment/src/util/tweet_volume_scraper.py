@@ -1,3 +1,7 @@
+'''
+This file fetches the Twitter volume required by the forecasting model
+'''
+
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd

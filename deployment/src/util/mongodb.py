@@ -1,3 +1,8 @@
+'''
+Initializes the MongoDB connection to establish communication
+with the database
+'''
+
 import pymongo
 
 import os

@@ -1,3 +1,7 @@
+'''
+This file serves as the endpoint of this server
+'''
+
 import sys
 sys.path.insert(0, 'D:/Uni/FYP/GitHub/BitForecast/server')
 
@@ -18,6 +22,10 @@ API = Api(app)
 
 @app.route('/ping')
 def hello():
+  '''
+  Ping server health check
+  '''
+
   return {
     'output': 'BitForecast server is healthy',
     'status': 200
@@ -25,6 +33,10 @@ def hello():
 
 @app.route('/api/v1/models/get-metrics', methods=['GET'])
 def get_metrics():
+  '''
+  Check current models' evaluation metrics
+  '''
+
   multivariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/multivariate_evaluation.csv')
   univariate_evaluation = pd.read_csv('D:/Uni/FYP/GitHub/BitForecast/ml/notebooks/model/data/univariate_evaluation.csv')
 
@@ -55,6 +67,10 @@ def get_metrics():
 
 @app.route('/api/v1/models/univariate', methods=['POST'])
 def univariate():
+  '''
+  Perform a univariate forecast
+  '''
+
   inputs = request.get_json()
   print(inputs)
 
@@ -75,6 +91,10 @@ def univariate():
 
 @app.route('/api/v1/models/multivariate', methods=['POST'])
 def multivariate():
+  '''
+  Perform a multivariate forecast
+  '''
+
   try:
     output = multivariate_forecast()
     print(output)
@@ -88,6 +108,10 @@ def multivariate():
 
 @app.route('/api/v1/models/univariate/update', methods=['POST'])
 def update_univariate_model():
+  '''
+  Update the univariate model
+  '''
+
   try:
     update_data()
   except Exception as e:
@@ -106,6 +130,10 @@ def update_univariate_model():
 
 @app.route('/api/v1/models/multivariate/update', methods=['POST'])
 def update_multivariate_model():
+  '''
+  Update the multivariate model
+  '''
+
   try:
     update_data()
   except Exception as e:
@@ -124,6 +152,10 @@ def update_multivariate_model():
 
 @app.route('/api/v1/models/update', methods=['POST'])
 def update_models():
+  '''
+  Update all models
+  '''
+
   try:
     print('Updating univariate model...')
     create_univariate_ensemble()
@@ -144,6 +176,10 @@ def update_models():
 
 @app.route('/api/v1/data/update', methods=['POST'])
 def update_datasets():
+  '''
+  Update datasets
+  '''
+
   try:
     update_data()
     return {

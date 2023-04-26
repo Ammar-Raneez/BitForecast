@@ -1,3 +1,7 @@
+'''
+This file fetches the Twitter sentiment required by the forecasting model
+'''
+
 import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from lingua import Language, LanguageDetectorBuilder
